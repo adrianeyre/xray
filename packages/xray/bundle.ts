@@ -4,7 +4,7 @@
 // package with its dependencies installed, the Node.js this runs on for that
 // platform, checked against nodejs.org's SHA-256, and launchers; then a
 // SHA256SUMS.txt of them all. The download for this machine is run, to check
-// it starts, before it is archived. The Release workflow runs it once it has
+// it starts, before it is archived. The CI workflow runs it once it has
 // packed a version; it needs tar, and zip.
 
 import { execFile } from "node:child_process";
@@ -49,9 +49,17 @@ try {
   // The package, as npm installs it: its files, then its dependencies.
   await run("tar", ["-xzf", tarball, "-C", work]);
   const app = join(work, "package");
-  const { version } = JSON.parse(
-    await readFile(join(app, "package.json"), "utf8"),
-  ) as { readonly version: string };
+  const manifest = join(app, "package.json");
+  const installed = JSON.parse(await readFile(manifest, "utf8")) as {
+    version: string;
+    devDependencies?: unknown;
+  };
+  const { version } = installed;
+  // Without its devDependencies, as npm installs it for a user: with them,
+  // npm resolves them all even with --omit=dev, and the workspace's own
+  // (@xray/cli…) are on no registry.
+  delete installed.devDependencies;
+  await writeFile(manifest, `${JSON.stringify(installed, null, 2)}\n`);
   await run(
     "npm",
     [
@@ -160,7 +168,7 @@ async function bundle(
       target.os === "windows"
         ? await run("cmd", ["/c", join(folder, "xray.cmd"), "--help"])
         : await run(join(folder, "xray"), ["--help"]);
-    if (!stdout.includes("xray reconstruct")) {
+    if (!stdout.includes("Usage: xray <command>")) {
       throw new Error(`${name}'s xray --help printed no usage:\n${stdout}`);
     }
   }
