@@ -170,7 +170,7 @@ jq -r .outcome ./out/xray-report.json        # full, partial or unverified
 - [Smoke test against a real application](docs/reference/real-app.md): reconstructing AwsWatchman as released, and why it was chosen: what is checked, how to run it, its results, and the gaps it found
 - [`xray ui`](docs/reference/xray-ui.md): the local web UI: uploading an Assembly or a folder, reconstructing from a path, where it listens, its Workspace, how it stops, and its API
 - [Releasing](docs/processes/releasing.md): what the npm package holds, the commit messages that release a change, and how a version is published
-- [Changelog](packages/xray/CHANGELOG.md): what changed in each version of `@adrianeyre/xray`
+- [Changelog](CHANGELOG.md): what changed in each version of `@adrianeyre/xray`
 
 ## Developing
 

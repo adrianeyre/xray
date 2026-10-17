@@ -63,7 +63,7 @@ The downloads are not code-signed: Windows may warn before running `xray.cmd`, a
 
 ## Making a change that users will get
 
-Write its commit message as a [Conventional Commit](https://www.conventionalcommits.org): its type says how far the change moves `@adrianeyre/xray`'s version, and its description becomes the line in the release notes and `packages/xray/CHANGELOG.md`.
+Write its commit message as a [Conventional Commit](https://www.conventionalcommits.org): its type says how far the change moves `@adrianeyre/xray`'s version, and its description becomes the line in the release notes and `CHANGELOG.md`.
 
 | Commit | Release |
 | --- | --- |
@@ -82,15 +82,15 @@ On every push to `main`, once the checks on every OS pass, the CI workflow's `re
 
 1. Finds the last release, the latest tag `v<version>` on `main`, and reads the commits since. If none of them releases anything, it stops.
 2. Works out the next version from them, and checks that npm does not have it already.
-3. Writes it to `packages/xray/package.json`, and the release notes to the top of `packages/xray/CHANGELOG.md`.
+3. Writes it to `packages/xray/package.json`, and the release notes to the top of [`CHANGELOG.md`](../../CHANGELOG.md).
 4. Tests the package at that version, as CI does (`pnpm --filter @adrianeyre/xray test`), then packs it with `pnpm pack`, which builds it, and writes [the downloads](#the-downloads) from what it packed. A failing test stops the release here, before anything is committed, tagged or published.
-5. Commits `packages/xray/package.json` and `packages/xray/CHANGELOG.md` to `main` as `chore(release): <version> [skip ci]`, and tags that commit `v<version>`. `[skip ci]` stops the commit starting the workflow again.
-6. Publishes the tarball to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers): `npm publish`, with no token, and with provenance.
+5. Commits `packages/xray/package.json` and `CHANGELOG.md` to `main` as `chore(release): <version> [skip ci]`, and tags that commit `v<version>`. `[skip ci]` stops the commit starting the workflow again.
+6. Publishes the tarball to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers): `npm publish`, with no token, and with provenance. Until `@adrianeyre/xray` is on npm, it says so, in a notice on the run, and publishes nothing: the version is released, tagged and in the changelog all the same.
 7. Creates the GitHub release `v<version>`, with the release notes and the downloads attached, and comments on the issues and pull requests it includes.
 
-Then it runs the install instructions, as written, against that version on npm, on Windows, macOS and Linux, with its `verify-install` job (see [The project site](project-site.md#how-the-install-instructions-are-verified)), and runs the downloads, each on its own OS.
+Once it has published a version, it runs the install instructions, as written, against that version on npm, on Windows, macOS and Linux, with its `verify-install` job (see [The project site](project-site.md#how-the-install-instructions-are-verified)), and, for every version it releases, runs the downloads, each on its own OS.
 
-Version 1.0.0 is published by hand (see below), so the first version the workflow publishes is the one after it. Until there is a `v*` tag, the release job releases nothing, and says so.
+The first version, 1.0.0, is released and tagged by the workflow, but published to npm by hand (see below); every version after it, the workflow publishes too.
 
 To see what the next release would be, without releasing it, from an up-to-date `main`, with a GitHub token that can push to the repository:
 
@@ -105,28 +105,21 @@ GITHUB_TOKEN=$(gh auth token) RUNNER_TEMP=$(mktemp -d) pnpm exec semantic-releas
 These are done by hand, by an owner of the repository and of the package on npm, in this order. The workflow cannot do them.
 
 1. **Rename the repository** from `temp` to `xray`, in its _Settings → General_, under _Repository name_. `packages/xray/package.json` (`repository`, `homepage`, `bugs`), the README, the package's README, the project site and the docs already name it `xray`; GitHub redirects the old address to the new one.
-2. **Publish 1.0.0 by hand, and tag it.** npm lets a trusted publisher be added only to a package that already exists, so the first version cannot be published by the workflow. `packages/xray/package.json` is at `1.0.0`, and `packages/xray/CHANGELOG.md` has its changes. Publish it from `main`:
+2. **Publish the first version by hand.** npm lets a trusted publisher be added only to a package that already exists, so the first version cannot be published by the workflow. The workflow releases it all the same, on the first push to `main` with a `feat:` or `fix:`: it tags it `v1.0.0`, adds its notes to `CHANGELOG.md`, and creates its GitHub release, with the downloads. Publish that version to npm from its tag:
 
    ```bash
-   git switch main && git pull
+   git fetch --tags && git switch --detach v1.0.0
    pnpm install --frozen-lockfile
    pnpm --filter @adrianeyre/xray test
    npm login --auth-type=web
    pnpm --filter @adrianeyre/xray publish --access public --no-git-checks
-   ```
-
-   Then tag the commit it was published from `v1.0.0`, and create its GitHub release, with its notes from its changelog. semantic-release takes the tag as the last release, and releases only what is merged after it; without it, the workflow would try to release 1.0.0 again, and stops, as npm has it.
-
-   ```bash
-   git tag v1.0.0 && git push origin v1.0.0
-   awk '/^## /{n++} n==1 && !/^## /' packages/xray/CHANGELOG.md > release-notes.md
-   gh release create v1.0.0 --verify-tag --title v1.0.0 --notes-file release-notes.md
+   git switch main
    ```
 
    Then run the CI workflow by hand, from the repository's _Actions_ tab, with _verify-install_ `1.0.0`, to check the install instructions against it on every OS.
 
 3. **Add the trusted publisher.** On npmjs.com, in `@adrianeyre/xray`'s _Settings → Trusted publishing_, add GitHub Actions: owner `adrianeyre`, repository `xray`, workflow `ci.yml`, no environment. Every later version is published by the workflow.
-4. **Let the workflow push to `main`.** It commits each release's version and changelog to `main`, and pushes its tag, with the workflow's own `GITHUB_TOKEN`. Should `main` be protected, by a branch protection rule or a ruleset, that needs pull requests or status checks, let GitHub Actions bypass it (in a ruleset's _Bypass list_, add the _GitHub Actions_ app); else the release fails at step 5, having published nothing. Should tags be protected, let it create `v*` tags likewise. No other secret is needed: npm is published to with trusted publishing, and GitHub with `GITHUB_TOKEN`.
+4. **Let the workflow push to `main`.** It commits each release's version and changelog to `main`, and pushes its tag, with the workflow's own `GITHUB_TOKEN`. Should `main` be protected, by a branch protection rule or a ruleset, that needs pull requests or status checks, let GitHub Actions bypass it (in a ruleset's _Bypass list_, add the _GitHub Actions_ app); else the release fails at step 5, having tagged and published nothing. Should tags be protected, let it create `v*` tags likewise. No other secret is needed: npm is published to with trusted publishing, and GitHub with `GITHUB_TOKEN`.
 
 Should the repository be renamed again, change the trusted publisher's repository, and the `repository`, `homepage` and `bugs` URLs in `packages/xray/package.json`, to match: npm checks a version's provenance against them.
 

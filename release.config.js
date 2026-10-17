@@ -13,15 +13,22 @@
 // root package.json's devEngines makes npm refuse to run within it.
 
 const preset = "conventionalcommits";
-const changelogFile = "packages/xray/CHANGELOG.md";
+const changelogFile = "CHANGELOG.md";
+// The title the changelog keeps at its top, above the newest version's notes.
+const changelogTitle = [
+  "# Changelog",
+  "",
+  "semantic-release writes each version's notes at the top of this file, from the Conventional Commits it releases ([Releasing](docs/processes/releasing.md)).",
+].join("\n");
 
 /** @type {import("semantic-release").Options} */
 export default {
   branches: ["main"],
   // Tags are v1.0.0, v1.0.1...: one package is published, so its version
-  // alone names a release. Version 1.0.0 is published by hand, from the commit
-  // tagged v1.0.0 (docs/processes/releasing.md), and later versions follow on
-  // from that tag.
+  // alone names a release. Each is tagged, and its notes added to the
+  // changelog, whether or not npm can be published to yet: until the package
+  // exists on npm, publishCmd says so and publishes nothing
+  // (docs/processes/releasing.md).
   tagFormat: "v${version}",
   plugins: [
     // feat: is a minor release, fix: and perf: a patch, and a breaking change
@@ -29,10 +36,7 @@ export default {
     // as docs:, chore:, test: or ci:, releases nothing.
     ["@semantic-release/commit-analyzer", { preset }],
     ["@semantic-release/release-notes-generator", { preset }],
-    [
-      "@semantic-release/changelog",
-      { changelogFile, changelogTitle: "# @adrianeyre/xray" },
-    ],
+    ["@semantic-release/changelog", { changelogFile, changelogTitle }],
     // Writes the version to packages/xray/package.json, and nothing else: it
     // cannot publish the package, as it runs `npm publish packages/xray` from
     // the repository's root, where devEngines stops npm, and would publish its
@@ -58,10 +62,24 @@ export default {
           'pnpm --filter @adrianeyre/xray test && pnpm --filter @adrianeyre/xray pack --pack-destination "$RUNNER_TEMP/xray-release" && pnpm --filter @adrianeyre/xray bundle "$RUNNER_TEMP/xray-release/adrianeyre-xray-${nextRelease.version}.tgz" "$PWD/packages/xray/release"',
         // Publishes that tarball with npm trusted publishing: npm exchanges the
         // workflow's OIDC token for one that can publish, so no npm token is
-        // stored anywhere, and gives the version provenance.
-        publishCmd:
-          'cd "$RUNNER_TEMP" && npm publish "$RUNNER_TEMP/xray-release/adrianeyre-xray-${nextRelease.version}.tgz" --access public --provenance',
-        // Tells the CI workflow which version to verify the install of.
+        // stored anywhere, and gives the version provenance. npm lets a
+        // trusted publisher be added only to a package that exists, so until
+        // the first version is published by hand, it says so and publishes
+        // nothing; any other failure to ask npm fails the release.
+        publishCmd: [
+          'cd "$RUNNER_TEMP"',
+          "if found=$(npm view @adrianeyre/xray name 2>&1); then",
+          '  npm publish "$RUNNER_TEMP/xray-release/adrianeyre-xray-${nextRelease.version}.tgz" --access public --provenance &&',
+          '    echo "published=true" >> "$GITHUB_OUTPUT"',
+          'elif echo "$found" | grep -q E404; then',
+          '  echo "::notice::@adrianeyre/xray is not on npm yet, so ${nextRelease.version} was tagged but not published: publish it by hand (docs/processes/releasing.md#setting-up-once)."',
+          "else",
+          '  echo "$found" >&2',
+          "  exit 1",
+          "fi",
+        ].join("\n"),
+        // Tells the CI workflow which version it released, to check its
+        // downloads, and, once published, its install.
         successCmd: 'echo "version=${nextRelease.version}" >> "$GITHUB_OUTPUT"',
       },
     ],
