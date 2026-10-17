@@ -27,8 +27,8 @@ jobs:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    # The tests alone take about 13 minutes on Linux, and longer on Windows
-    # and macOS, where 30 was not enough.
+    # The tests take about 10 minutes on Linux, and longer on Windows and
+    # macOS; failing ones can take as long again to report.
     timeout-minutes: 60
     defaults:
       run:

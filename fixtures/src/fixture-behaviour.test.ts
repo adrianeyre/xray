@@ -13,6 +13,10 @@ import { runAssembly, runsOn } from "./run-assembly.js";
 // across them too — a Round-trip can only compare deterministic programs. A
 // .NET Framework Fixture runs only on Windows, so elsewhere its runs are skipped.
 
+// A run of the benchmark Fixture, of about 2,000 types, can take longer than
+// vitest's default 5 s on a busy CI runner.
+const RUN_TIMEOUT_MS = 60_000;
+
 const fixtures = await Promise.all(
   (await listFixtures()).map(async (name) => ({
     name,
@@ -39,6 +43,7 @@ describe.each(fixtures.filter(({ inputs }) => inputs.length > 0))(
 
     it.for(inputs.map((input) => ({ ...input, shown: input.args.join(" ") })))(
       "behaves as expected given [$shown]",
+      { timeout: RUN_TIMEOUT_MS },
       async ({ args, expected }, { skip }) => {
         const { assemblyPath, targetFramework } = fixture;
         skip(

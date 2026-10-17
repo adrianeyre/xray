@@ -341,4 +341,32 @@ describe("runProgram", () => {
       `${"x".repeat(MAX_RUN_OUTPUT)}\n[Xray kept only the first ${MAX_RUN_OUTPUT} characters.]\n`,
     );
   });
+
+  it("says it kept only the first MiB when what follows it comes later", async () => {
+    // macOS reads a pipe in chunks that can fill the MiB exactly.
+    const directory = await solutionRunning(
+      [
+        `process.stdout.write("x".repeat(${MAX_RUN_OUTPUT}));`,
+        `setTimeout(() => process.stdout.write("y"), 500);`,
+        "",
+      ].join("\n"),
+    );
+
+    const run = await runProgram(directory, console_, node);
+
+    expect(run.status).toBe("exited");
+    expect(run.stdout).toBe(
+      `${"x".repeat(MAX_RUN_OUTPUT)}\n[Xray kept only the first ${MAX_RUN_OUTPUT} characters.]\n`,
+    );
+  });
+
+  it("keeps exactly a MiB, saying nothing was cut", async () => {
+    const directory = await solutionRunning(
+      `process.stdout.write("x".repeat(${MAX_RUN_OUTPUT}));\n`,
+    );
+
+    const run = await runProgram(directory, console_, node);
+
+    expect(run.stdout).toBe("x".repeat(MAX_RUN_OUTPUT));
+  });
 });
