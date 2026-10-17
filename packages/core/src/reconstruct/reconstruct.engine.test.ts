@@ -3011,7 +3011,13 @@ describe("reconstruct (against the real engine)", () => {
 
       await reconstruct(assemblyPath, join(await scratch(), "out"), {
         build: false,
-        onProgress: (event) => events.push(`${event.kind} ${event.stage}`),
+        // On a slow machine analyse may also report its progress, once a
+        // second.
+        onProgress: (event) => {
+          if (event.kind !== "stage-progress") {
+            events.push(`${event.kind} ${event.stage}`);
+          }
+        },
         onInspected: (summary) => {
           inspected.push(summary);
           events.push("inspected");
