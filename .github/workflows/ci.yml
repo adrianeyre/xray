@@ -205,7 +205,9 @@ jobs:
   # commits the version and the changelog back to main with [skip ci], and
   # tags it; publishes the tarball to npm with trusted publishing; creates the
   # GitHub release, carrying downloads for Windows, macOS and Linux that run
-  # without Node.js installed. release.config.js holds its configuration.
+  # without Node.js installed. Until the package is on npm, it releases,
+  # tags and adds to CHANGELOG.md all the same, but publishes nothing.
+  # release.config.js holds its configuration.
   release:
     name: Release
     needs: check
@@ -213,8 +215,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     outputs:
-      # The version published, or empty when nothing was released.
+      # The version released, tagged and added to CHANGELOG.md, or empty when
+      # nothing was.
       version: ${{ steps.release.outputs.version }}
+      # Whether it was published to npm too: not until the package is there
+      # (docs/processes/releasing.md#setting-up-once).
+      published: ${{ steps.release.outputs.published }}
     permissions:
       # Commits the version and changelog, pushes the tag, and creates the
       # GitHub release.
@@ -231,47 +237,32 @@ jobs:
           # and the commits since. It pushes with GITHUB_TOKEN itself.
           fetch-depth: 0
           persist-credentials: false
-      # Version 1.0.0 is published, and tagged, by hand, as npm lets a trusted
-      # publisher be added only to a package that exists already; until then,
-      # the workflow would tag a version it cannot publish.
-      - id: ready
-        run: |
-          if [ -n "$(git tag --list 'v*')" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::notice::Nothing is released until 1.0.0 is published and tagged v1.0.0 by hand: docs/processes/releasing.md#setting-up-once."
-          fi
-      - if: steps.ready.outputs.ready == 'true'
-        uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6
       # No registry-url: its .npmrc would stand in the way of trusted publishing.
-      - if: steps.ready.outputs.ready == 'true'
-        uses: actions/setup-node@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
           package-manager-cache: false
       # The package bundles the engine, published with the .NET SDK.
-      - if: steps.ready.outputs.ready == 'true'
-        uses: actions/setup-dotnet@v6
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
-      - if: steps.ready.outputs.ready == 'true'
-        run: pnpm install --frozen-lockfile
-      - if: steps.ready.outputs.ready == 'true'
-        id: release
+      - run: pnpm install --frozen-lockfile
+      - id: release
         run: pnpm exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # The install instructions the project site and the README give, run as
-  # written, on every OS: against the version just released, or, run by hand,
-  # the one asked for. `pnpm add -g` into a PNPM_HOME of its own, then
+  # written, on every OS: against the version just published, or, run by
+  # hand, the one asked for. `pnpm add -g` into a PNPM_HOME of its own, then
   # `xray doctor`, then checks `xray --help` is the site's CLI reference.
   verify-install:
     name: install (${{ matrix.os }})
     needs: release
     if: >-
       !cancelled() &&
-      (needs.release.outputs.version != '' || inputs.verify-install != '')
+      (needs.release.outputs.published == 'true' || inputs.verify-install != '')
     permissions:
       contents: read
     strategy:

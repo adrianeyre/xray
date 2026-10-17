@@ -502,7 +502,7 @@ ${structuredData()}
             <li><a href="${NPM_URL}">Package on npm</a></li>
             <li><a href="${REPOSITORY_URL}/issues">Issues</a></li>
             <li><a href="${REPOSITORY_URL}/releases">Releases</a></li>
-            <li><a href="${repositoryFileUrl("packages/xray/CHANGELOG.md")}">Changelog</a></li>
+            <li><a href="${repositoryFileUrl("CHANGELOG.md")}">Changelog</a></li>
           </ul>
         </nav>
         <nav class="footer-nav" aria-labelledby="footer-legal">

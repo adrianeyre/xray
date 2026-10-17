@@ -1,8 +1,10 @@
-# @adrianeyre/xray
+# Changelog
 
-## 1.0.0
+semantic-release writes each version's notes at the top of this file, from the Conventional Commits it releases ([Releasing](docs/processes/releasing.md)).
 
-### Major Changes
+### What 1.0.0 brings
+
+#### Major Changes
 
 - d204f8c: Xray 1.0, the first release of `@adrianeyre/xray`: the `xray` binary, the engine sidecar and the web app, in one package, for Windows, macOS and Linux. Install it with `pnpm add -g @adrianeyre/xray`, then run `xray doctor`, which checks Node.js 26.10.0, a .NET SDK 8 or later, and the engine.
 
@@ -10,7 +12,7 @@
   - `xray reconstruct <assembly|folder> -o <dir> [--force] [--no-build] [--run] [--no-siblings] [--offline]` turns a Managed Assembly into a Recovered Solution: an SDK-style project for its original target framework, one C# file per type, its references resolved by the framework, NuGet packages, Sibling Assemblies and copied binaries, then builds it with `dotnet build` and classes it as a Full or Partial Reconstruction (exit code 4), printing a summary and writing `xray-report.json`, whose schema is documented and versioned (`schemaVersion` 1).
   - `xray ui [--port <n>]` serves the web UI on `127.0.0.1` only: drop an Assembly or a folder, or give a path, follow the Reconstruction live, browse the recovered C# and XAML, read the report, and download the Recovered Solution as a zip. Nothing leaves the machine but NuGet lookups and restores, which `--offline` turns off.
 
-### Minor Changes
+#### Minor Changes
 
 - 4427926: `xray reconstruct` and `xray ui` reconstruct Assemblies for .NET Framework 2.0 and 3.5 and `netstandard`, on a best-effort basis, each into an SDK-style project for its own framework. An Assembly built before .NET Framework 4.0 records no `TargetFrameworkAttribute`, so its framework, `net20` or `net35`, is told from its CLR and what it references. `xray inspect` (`targetFramework.inferredFrom`, `targetFramework.support`) and `xray ui`'s inspect summary say how a framework was told and how far Xray supports it; a Reconstruction of an Assembly for a framework supported on a best-effort basis warns of it, on stderr, in `xray-report.json` (`warnings`) and in `xray ui`'s report. An array indexed from its end is decompiled as `values[values.Length - 1]`, not `values[^1]`, for a framework without `System.Index`, such as .NET Framework and .NET Standard 2.0, so it builds. An Assembly for .NET Framework 1.x is refused, saying no SDK-style project can target it.
 - 89352ec: The web app's viewer highlights projects (`.csproj`) and `.resx` files as XML, as it does XAML, and solutions (`.sln`): their header, comments, keywords, quoted names and paths, GUIDs and version numbers. Any other file it shows as plain text, as before.
@@ -24,7 +26,7 @@
 - 137b721: Reconstruct Windows Forms apps, for .NET and .NET Framework, into projects that build on any OS: a project whose Assembly references Windows Forms uses it again (`UseWindowsForms`), for a Windows target framework where .NET 5 or later needs one, with `EnableWindowsTargeting`; each form is decompiled with the `InitializeComponent` its designer wrote, and its resources, its icon and images among them, are kept byte for byte, referencing `System.Resources.Extensions` where .NET Framework needs it to read them. The `ApplicationConfiguration` the Windows Forms source generator wrote is kept as decompiled. Off Windows, such an Assembly is decompiled with the reference assemblies of its framework, from the global-packages folder or, unless `--offline`, nuget.org, with a `reference-assemblies-not-found` warning where they are found in neither.
 - de7dcea: Reconstruct WPF apps into projects that build on any OS: a project whose Assembly references WPF uses it again (`UseWPF`), for a Windows target framework where .NET 5 or later needs one, with `EnableWindowsTargeting`. The BAML of its WPF resources is decompiled back to XAML, with ILSpy's BAML decompiler, its resource dictionaries and styles among it, and an app's `Startup` and other events, each file listed as the `ApplicationDefinition` or a `Page` beside its code-behind, and every other file they held as a `Resource`; each class's code-behind leaves out what the markup compiler generates again from its XAML, so it compiles without a member declared twice. The report counts the WPF resources as recovered as `xaml`, and warns (`xaml-not-recovered`) where their BAML is kept as it is. The web app's viewer highlights XAML.
 
-### Patch Changes
+#### Patch Changes
 
 - e95fce6: `xray reconstruct` and `xray ui` declare each `[GeneratedRegex]` method `partial`, as it was written, in types declared `partial`, and leave out what the regex source generator wrote of it (the method's body, its `[GeneratedCode]`, and the `Regex` and `Utilities` it declared file-scoped in `RegexGenerator.g.cs`), for the generator to write again as the Recovered Solution is built. Before, all of it was decompiled as ordinary code beside the attribute, and the generator refused the method (`SYSLIB1043`), so the Recovered Solution did not build. With a PDB, the generator's code no longer decides which file a type is laid out in.
 - ea6ea6f: `xray reconstruct` and `xray ui` leave a reference to an assembly signed with one of Microsoft's keys to the target framework only where the framework provides it: where its reference assemblies (`Microsoft.NETCore.App.Ref`, `Microsoft.NETFramework.ReferenceAssemblies.*`, `NETStandard.Library`…), found in the .NET SDK's packs folder, the global-packages cache or, unless `--offline`, on nuget.org, hold an assembly of that name at that version or later. Any other is one of Microsoft's NuGet packages (`System.CommandLine`, `NuGet.Versioning`, `System.CodeDom`, `Microsoft.Extensions.*`, or `System.Collections.Immutable` 9.0 for .NET 8…), now referenced with a `PackageReference`, or else copied, never reconstructed as a Sibling Assembly; before, it was left to a framework that did not provide it, and the Recovered Solution did not build. `xray-report.json` (`dependencies[].reason`) says which reference assemblies hold each reference, or do not.

@@ -30,7 +30,7 @@ Every Reconstruction writes `xray-report.json` beside the `.sln`, classing it as
 
 ## Documentation
 
-- [Project site](https://xray.adrianeyre.co.uk/), [README](https://github.com/adrianeyre/xray#readme), [Glossary](https://github.com/adrianeyre/xray/blob/main/GLOSSARY.md) and [Changelog](https://github.com/adrianeyre/xray/blob/main/packages/xray/CHANGELOG.md)
+- [Project site](https://xray.adrianeyre.co.uk/), [README](https://github.com/adrianeyre/xray#readme), [Glossary](https://github.com/adrianeyre/xray/blob/main/GLOSSARY.md) and [Changelog](https://github.com/adrianeyre/xray/blob/main/CHANGELOG.md)
 - [`xray ui`](https://github.com/adrianeyre/xray/blob/main/docs/reference/xray-ui.md), [`xray reconstruct`](https://github.com/adrianeyre/xray/blob/main/docs/reference/xray-reconstruct.md), [`xray inspect --json`](https://github.com/adrianeyre/xray/blob/main/docs/reference/xray-inspect-json.md), [`xray-report.json`](https://github.com/adrianeyre/xray/blob/main/docs/reference/xray-report-json.md)
 
 ## Licence

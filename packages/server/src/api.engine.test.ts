@@ -201,8 +201,11 @@ describe("the server, reconstructing by path (against the real engine)", () => {
 
     const { events } = await reconstructOn(server, NATIVE_EXECUTABLE_FIXTURE);
 
+    // On a slow machine analyse may also report its progress, once a second.
     expect(
-      progressOf(events).map((event) => `${event.kind} ${event.stage}`),
+      progressOf(events)
+        .filter((event) => event.kind !== "stage-progress")
+        .map((event) => `${event.kind} ${event.stage}`),
     ).toEqual(["stage-started analyse", "stage-finished analyse"]);
     expect(endOf(events)).toEqual({
       kind: "rejected",
