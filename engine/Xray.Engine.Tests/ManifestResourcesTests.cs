@@ -22,12 +22,14 @@ public sealed class ManifestResourcesTests : IDisposable
     /// project), and System.Private.CoreLib, which embeds the strings of its
     /// messages.
     /// </summary>
-    public static TheoryData<string> Assemblies =>
-    [
-        Tests.Location,
-        typeof(object).Assembly.Location,
-        typeof(CSharpDecompiler).Assembly.Location,
-    ];
+    public static TheoryData<string> Assemblies => [.. Loadable().Select(assembly => assembly.Location)];
+
+    // Each from a type of its own, which loads it: a theory may run in a
+    // process other than the one that listed its data, before anything else
+    // there has loaded the decompiler.
+    private static Assembly[] Loadable() => [Tests, typeof(object).Assembly, typeof(CSharpDecompiler).Assembly];
+
+    private static Assembly Loaded(string path) => Loadable().Single(assembly => assembly.Location == path);
 
     private static string SatellitePath(string culture) =>
         Path.Combine(Path.GetDirectoryName(Tests.Location)!, culture, "Xray.Engine.Tests.resources.dll");
@@ -73,7 +75,7 @@ public sealed class ManifestResourcesTests : IDisposable
     [MemberData(nameof(Assemblies))]
     public void ReadsEveryResourceAsReflectionNamesThem(string path)
     {
-        var loaded = AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.Location == path);
+        var loaded = Loaded(path);
 
         var read = ManifestResources.Read(path);
 
@@ -87,7 +89,7 @@ public sealed class ManifestResourcesTests : IDisposable
     [MemberData(nameof(Assemblies))]
     public void GivesTheBytesOfEveryEmbeddedResourceItDoesNotDecode(string path)
     {
-        var loaded = AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.Location == path);
+        var loaded = Loaded(path);
 
         foreach (var resource in ManifestResources.Read(path).Resources.Where(resource => resource.Entries is null))
         {
