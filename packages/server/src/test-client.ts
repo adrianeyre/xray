@@ -52,6 +52,60 @@ export function send(
   });
 }
 
+/**
+ * Sends `body` as {@link send} does, but its headers first, waiting a moment
+ * for a refusal before sending the body: a server that refuses a body from
+ * its length alone closes the connection with it unread, and on Windows the
+ * reset can reach a client still sending it before the refusal does.
+ */
+export function sendRefusable(
+  port: number,
+  method: string,
+  path: string,
+  body: string | Buffer,
+): Promise<JsonResponse> {
+  return new Promise((resolve, reject) => {
+    let answered = false;
+    const sent = request(
+      {
+        host: SERVER_HOST,
+        port,
+        method,
+        path,
+        headers: {
+          host: `${SERVER_HOST}:${port}`,
+          "content-type": "application/json",
+          "content-length": Buffer.byteLength(body),
+          origin: `http://${SERVER_HOST}:${port}`,
+        },
+      },
+      (response) => {
+        answered = true;
+        clearTimeout(timer);
+        let text = "";
+        response.setEncoding("utf8");
+        response.on("data", (chunk: string) => (text += chunk));
+        response.on("end", () => {
+          resolve({
+            status: response.statusCode ?? 0,
+            headers: response.headers,
+            body: text === "" ? undefined : (JSON.parse(text) as unknown),
+          });
+          sent.destroy();
+        });
+      },
+    );
+    // The body, unsent, is moot once the server has answered.
+    sent.on("error", (error) => {
+      if (!answered) {
+        reject(error);
+      }
+    });
+    sent.flushHeaders();
+    const timer = setTimeout(() => sent.end(body), 1_000);
+  });
+}
+
 /** Asks the server at `port` to reconstruct the Assembly at `path`. */
 export function startReconstruction(
   port: number,

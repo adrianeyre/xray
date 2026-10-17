@@ -956,26 +956,32 @@ describe("reconstruct (against the real engine)", () => {
         outcome: "full",
         inspect: { pdb },
         // Eleven types, in the Fixture's six source files: its partial
-        // Statement is declared once, in the file most of it was.
+        // Statement is declared once, in the file most of it was. A Windows
+        // PDB records no file for its two enums, which have no code, so there
+        // each is in a file of its own.
         solution: {
           typeCount: 11,
-          sourceFileCount: 6,
+          sourceFileCount: debugSymbolsFormat === "portable" ? 6 : 8,
           projects: [{ pdb }],
         },
         warnings: [],
       });
       // As the Fixture's source is laid out, not by namespace (Ledger.Banking,
       // Ledger.Reports.Columns…). A Windows PDB records no file for a type
-      // with no code of its own, so there its interface is laid out by
-      // namespace, below the root namespace, Ledger.
+      // with no code of its own, so there its interface and enums are laid
+      // out by namespace, below the root namespace, Ledger.
       expect(report.solution.files.toSorted()).toEqual(
         [
           "DebugSymbols.sln",
           "DebugSymbols/Accounts/Account.cs",
           "DebugSymbols/Accounts/Errors/InsufficientFundsException.cs",
-          debugSymbolsFormat === "portable"
-            ? "DebugSymbols/Accounts/IAccountSource.cs"
-            : "DebugSymbols/Banking/IAccountSource.cs",
+          ...(debugSymbolsFormat === "portable"
+            ? ["DebugSymbols/Accounts/IAccountSource.cs"]
+            : [
+                "DebugSymbols/Banking/IAccountSource.cs",
+                "DebugSymbols/Banking/TransactionKind.cs",
+                "DebugSymbols/Reports/Columns/Alignment.cs",
+              ]),
           "DebugSymbols/DebugSymbols.csproj",
           "DebugSymbols/Program.cs",
           "DebugSymbols/Properties/AssemblyInfo.cs",
@@ -997,7 +1003,11 @@ describe("reconstruct (against the real engine)", () => {
       expect(account).toContain("Transaction recorded = new Transaction(");
       // Each file's types, together, as they were declared.
       expect(account).toContain("public sealed record Transaction(");
-      expect(account).toContain("public enum TransactionKind");
+      expect(
+        debugSymbolsFormat === "portable"
+          ? account
+          : await read("Banking/TransactionKind.cs"),
+      ).toContain("public enum TransactionKind");
       const formatting = await read("Reports/Formatting.cs");
       expect(formatting).toContain("file static class Widths");
       expect(formatting).toContain("namespace Ledger.Reports.Columns");

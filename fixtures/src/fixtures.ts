@@ -7,6 +7,7 @@ import {
   mkdtemp,
   readdir,
   readFile,
+  realpath,
   rename,
   rm,
   writeFile,
@@ -215,7 +216,11 @@ async function buildOrReuse(
   dotnetPath: string,
 ): Promise<BuiltFixture> {
   const project = await fixtureProject(root, name);
-  const fixtureCache = join(cache, name);
+  // Its real path, as the build reports the Assembly's: Windows may give the
+  // temporary folder by its short name (C:\Users\RUNNER~1\…), and macOS
+  // through a link (/var is /private/var).
+  await mkdir(cache, { recursive: true });
+  const fixtureCache = join(await realpath(cache), name);
   const hash = await sourceHash(root, name, await sdkVersion(dotnetPath, root));
   const manifest = join(fixtureCache, `${hash}.json`);
 
