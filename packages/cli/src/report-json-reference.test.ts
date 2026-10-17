@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { copyFile, cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
@@ -153,9 +153,24 @@ afterAll(async () => {
 
 /** A PDB's check, as if the PDB were in `folder`, as the reference's examples put it. */
 function movedTo(pdb: PdbCheck, folder: string): PdbCheck {
+  // The examples' folders are POSIX paths, whatever this OS's are.
   return pdb.status === "none"
     ? pdb
-    : { ...pdb, path: join(folder, basename(pdb.path)) };
+    : { ...pdb, path: posix.join(folder, basename(pdb.path)) };
+}
+
+/**
+ * An example's JSON, parsed, with each file it puts in `/home/me/app` put in
+ * `folder` instead, as this OS writes a path there.
+ */
+function exampleIn(example: string, folder: string): unknown {
+  return JSON.parse(example, (_key, value: unknown) =>
+    typeof value === "string"
+      ? value.replaceAll(/\/home\/me\/app\/([\w.-]+)/g, (_path, file: string) =>
+          join(folder, file),
+        )
+      : value,
+  );
 }
 
 /** The text of the reference's section headed `## heading`. */
@@ -308,14 +323,7 @@ describe("docs/reference/xray-report-json.md", () => {
     expect(example).toBeDefined();
     // Only the folder the Assembly is in differs.
     const folder = dirname(nuget.inputs.path);
-    expect(
-      (JSON.parse(example as string) as XrayReport["packages"]).map(
-        (lookup) => ({
-          ...lookup,
-          reason: lookup.reason.replaceAll("/home/me/app", folder),
-        }),
-      ),
-    ).toEqual(nuget.packages);
+    expect(exampleIn(example as string, folder)).toEqual(nuget.packages);
     expect(nuget.solution.projects[0]?.packageReferences).toEqual([
       { id: "Newtonsoft.Json", version: "13.0.3" },
       { id: "Serilog", version: "3.1.1" },
@@ -329,9 +337,7 @@ describe("docs/reference/xray-report-json.md", () => {
     expect(example).toBeDefined();
     // Only the folder the Assembly is in differs.
     const folder = dirname(copied.inputs.path);
-    expect(
-      JSON.parse((example as string).replaceAll("/home/me/app", folder)),
-    ).toEqual(copied.dependencies);
+    expect(exampleIn(example as string, folder)).toEqual(copied.dependencies);
     expect(copied.solution.projects[0]?.binaryReferences).toEqual([
       "Dependencies/Kestrelwood.Checksums.dll",
     ]);
@@ -344,9 +350,7 @@ describe("docs/reference/xray-report-json.md", () => {
     expect(example).toBeDefined();
     // Only the folder the Assembly is in differs.
     const folder = dirname(stale.inputs.path);
-    expect(
-      JSON.parse((example as string).replaceAll("/home/me/app", folder)),
-    ).toEqual(stale.warnings);
+    expect(exampleIn(example as string, folder)).toEqual(stale.warnings);
     expect(stale.outcome).toBe("full");
     expect(stale.inspect.pdb).toMatchObject({ status: "mismatched" });
     expect(stale.solution.projects[0]?.pdb).toEqual(stale.inspect.pdb);
@@ -366,13 +370,12 @@ describe("docs/reference/xray-report-json.md", () => {
       )?.evidence ?? [];
     expect(decoders).toMatch(/^<PrivateImplementationDetails>\{/);
     expect(
-      JSON.parse(
-        (example as string)
-          .replaceAll("/home/me/app", folder)
-          .replaceAll(
-            /<PrivateImplementationDetails>\{[0-9A-F-]+\}\.[0-9A-F-]+/g,
-            decoders as string,
-          ),
+      exampleIn(
+        (example as string).replaceAll(
+          /<PrivateImplementationDetails>\{[0-9A-F-]+\}\.[0-9A-F-]+/g,
+          decoders as string,
+        ),
+        folder,
       ),
     ).toEqual(obfuscated.warnings);
     expect(obfuscated.obfuscated).toBe(true);
@@ -390,9 +393,7 @@ describe("docs/reference/xray-report-json.md", () => {
     expect(example).toBeDefined();
     // Only the folder the Assemblies are in differs.
     const folder = dirname(net35.inputs.path);
-    expect(
-      JSON.parse((example as string).replaceAll("/home/me/app", folder)),
-    ).toEqual(net35.warnings);
+    expect(exampleIn(example as string, folder)).toEqual(net35.warnings);
     expect(net35.outcome).toBe("full");
     expect(net35.solution.projects.map((p) => p.targetFramework)).toEqual([
       "net8.0",

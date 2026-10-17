@@ -9,7 +9,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { UPLOAD_LIST_LIMIT } from "./api.js";
 import type { Reconstruct } from "./reconstructions.js";
 import { SERVER_HOST, startServer, type XrayServer } from "./server.js";
-import { openStream, send, type JsonResponse } from "./test-client.js";
+import {
+  openStream,
+  send,
+  sendRefusable,
+  type JsonResponse,
+} from "./test-client.js";
 import { checkUploadFiles, UploadRefused, type UploadFile } from "./uploads.js";
 
 // Uploading an Assembly, or a folder, into the Workspace, and reconstructing
@@ -376,7 +381,12 @@ describe("POST /api/uploads, of a list over its limit", () => {
     const body = JSON.stringify({ files });
     expect(body.length).toBeGreaterThan(UPLOAD_LIST_LIMIT);
 
-    const response = await send(server.port, "POST", "/api/uploads", body);
+    const response = await sendRefusable(
+      server.port,
+      "POST",
+      "/api/uploads",
+      body,
+    );
 
     expect(response.status).toBe(413);
     expect(await readdir(server.workspace)).toEqual([]);

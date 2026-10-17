@@ -49,12 +49,12 @@ async function start(
 }
 
 /** Has something else listen on a port of 127.0.0.1, and says which. */
-function occupyPort(): Promise<number> {
+function occupyPort(port = 0): Promise<number> {
   return new Promise((resolve, reject) => {
     const blocker = createServer();
     blockers.push(blocker);
     blocker.once("error", reject);
-    blocker.listen({ host: SERVER_HOST, port: 0 }, () => {
+    blocker.listen({ host: SERVER_HOST, port }, () => {
       const address = blocker.address();
       if (address === null || typeof address === "string") {
         reject(new Error("Not listening on a TCP port."));
@@ -63,6 +63,21 @@ function occupyPort(): Promise<number> {
       }
     });
   });
+}
+
+/**
+ * Occupies a free port below every OS's ephemeral range (Linux's starts at
+ * 32768, Windows' and macOS's at 49152). Windows hands those out in order, so
+ * the one after a port the OS chose is the next any test is given.
+ */
+async function occupyPortBelowEphemeral(): Promise<number> {
+  for (;;) {
+    const port = 20_000 + Math.floor(Math.random() * 10_000);
+    const occupied = await occupyPort(port).catch(() => undefined);
+    if (occupied !== undefined) {
+      return occupied;
+    }
+  }
 }
 
 /** How a TCP connection to `host`:`port` went: "connected", or its error's code. */
@@ -217,11 +232,15 @@ describe("startServer", () => {
       async () => {
         const server = await start();
 
-        for (const address of externalAddresses()) {
-          expect(await tryConnect(address, server.port), address).not.toBe(
-            "connected",
-          );
-        }
+        // All at once: a machine may have dozens, each of which can take the
+        // whole connect timeout to refuse.
+        const addresses = externalAddresses();
+        const results = await Promise.all(
+          addresses.map((address) => tryConnect(address, server.port)),
+        );
+        addresses.forEach((address, i) => {
+          expect(results[i], address).not.toBe("connected");
+        });
       },
     );
 
@@ -287,7 +306,7 @@ describe("startServer", () => {
 
   describe("reports a busy port", () => {
     it("with the next free port to try instead, leaving no Workspace", async () => {
-      const busy = await occupyPort();
+      const busy = await occupyPortBelowEphemeral();
 
       const error = await startServer({ port: busy }).catch(
         (caught: unknown) => caught,

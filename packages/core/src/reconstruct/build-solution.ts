@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { mkdir, realpath } from "node:fs/promises";
-import { dirname } from "node:path";
+import { basename, dirname, join } from "node:path";
 
 import {
   parseBuildDiagnostics,
@@ -50,10 +50,16 @@ export async function buildSolution(
   solutionPath: string,
   options: BuildOptions = {},
 ): Promise<SolutionBuild> {
-  const { succeeded, output } = await runBuild(solutionPath, options);
   const directory = dirname(solutionPath);
-  // `dotnet build` may print the real path of a folder reached through a link.
   const real = await realpath(directory).catch(() => directory);
+  // Built at its real path: through a link, as macOS's temporary folder is
+  // (`/var` is `/private/var`), MSBuild meets each project referenced by
+  // another under both paths, as two projects, and builds both at once into
+  // the same files, failing to write one the other holds.
+  const { succeeded, output } = await runBuild(
+    join(real, basename(solutionPath)),
+    options,
+  );
   return {
     succeeded,
     output,

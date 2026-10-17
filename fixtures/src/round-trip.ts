@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readdir, realpath, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 
@@ -362,9 +362,18 @@ async function rebuild(
   assemblyName: string,
 ): Promise<string> {
   // A solution cannot report its projects' TargetPath, so look for the Assembly.
+  // Built at its real path, as `buildSolution` builds one: through a link, as
+  // macOS's temporary folder is, MSBuild meets a project referenced by another
+  // under both paths, as two projects.
   await dotnetBuild(
     dotnetPath,
-    [solution, "--configuration", "Release", "--artifacts-path", artifacts],
+    [
+      await realpath(solution),
+      "--configuration",
+      "Release",
+      "--artifacts-path",
+      artifacts,
+    ],
     "the Recovered Solution",
   );
   const bin = join(artifacts, "bin");

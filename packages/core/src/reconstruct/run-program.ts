@@ -300,7 +300,9 @@ export async function runProgram(
 
 /** `kept` with as much of `chunk` as fits in {@link MAX_RUN_OUTPUT}, saying when some was cut. */
 function keep(kept: string, chunk: string): string {
-  if (kept.length >= MAX_RUN_OUTPUT) {
+  // Longer than the MiB only once it says it was cut. Exactly the MiB, it
+  // still says so when more follows in a later chunk.
+  if (kept.length > MAX_RUN_OUTPUT || chunk.length === 0) {
     return kept;
   }
   const room = MAX_RUN_OUTPUT - kept.length;

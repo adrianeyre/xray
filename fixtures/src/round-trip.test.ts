@@ -239,10 +239,18 @@ describe("roundTrip", () => {
       expect(result.passed).toBe(false);
       expect(result.failure).toBeUndefined();
 
+      // A line keeps the "\r" Windows ends it with.
+      const cr = process.platform === "win32" ? "\r" : "";
       expect(runGiven(result, "int", "7", "2").differences).toEqual([
         {
           kind: "stdout",
-          lines: [{ line: 2, original: "7 - 2 = 5", rebuilt: "7 - 2 = 9" }],
+          lines: [
+            {
+              line: 2,
+              original: `7 - 2 = 5${cr}`,
+              rebuilt: `7 - 2 = 9${cr}`,
+            },
+          ],
         },
       ]);
       // b = 0 hides the wrong operator, but not the wrong error handling.
@@ -252,8 +260,8 @@ describe("roundTrip", () => {
           lines: [
             {
               line: 1,
-              original: "Cannot divide by zero.",
-              rebuilt: "Division by zero.",
+              original: `Cannot divide by zero.${cr}`,
+              rebuilt: `Division by zero.${cr}`,
             },
           ],
         },
@@ -284,16 +292,16 @@ describe("roundTrip", () => {
         [
           "Given int 7 2:",
           "  stdout line 2:",
-          '    original: "7 - 2 = 5"',
-          '    rebuilt:  "7 - 2 = 9"',
+          `    original: ${JSON.stringify(`7 - 2 = 5${cr}`)}`,
+          `    rebuilt:  ${JSON.stringify(`7 - 2 = 9${cr}`)}`,
         ].join("\n"),
       );
       expect(report).toContain(
         [
           "Given int 7 0:",
           "  stderr line 1:",
-          '    original: "Cannot divide by zero."',
-          '    rebuilt:  "Division by zero."',
+          `    original: ${JSON.stringify(`Cannot divide by zero.${cr}`)}`,
+          `    rebuilt:  ${JSON.stringify(`Division by zero.${cr}`)}`,
           "  exit code: original 2, rebuilt 4",
         ].join("\n"),
       );

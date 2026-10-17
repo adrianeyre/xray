@@ -15,15 +15,15 @@ public sealed class AssemblyInspectorTests : IDisposable
     /// (an Exe with top-level statements), ICSharpCode.Decompiler (a strong-named
     /// library) and System.Private.CoreLib (which embeds resources).
     /// </summary>
-    public static TheoryData<string> Assemblies =>
-    [
-        typeof(Session).Assembly.Location,
-        typeof(CSharpDecompiler).Assembly.Location,
-        typeof(object).Assembly.Location,
-    ];
+    public static TheoryData<string> Assemblies => [.. Loadable().Select(assembly => assembly.Location)];
 
-    private static Assembly Loaded(string path) =>
-        AppDomain.CurrentDomain.GetAssemblies().Single(assembly => assembly.Location == path);
+    // Each from a type of its own, which loads it: a theory may run in a
+    // process other than the one that listed its data, before anything else
+    // there has loaded the decompiler.
+    private static Assembly[] Loadable() =>
+        [typeof(Session).Assembly, typeof(CSharpDecompiler).Assembly, typeof(object).Assembly];
+
+    private static Assembly Loaded(string path) => Loadable().Single(assembly => assembly.Location == path);
 
     private static string? Token(AssemblyName name) =>
         name.GetPublicKeyToken() is { Length: > 0 } token ? Convert.ToHexString(token).ToLowerInvariant() : null;
