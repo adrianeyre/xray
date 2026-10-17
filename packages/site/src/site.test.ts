@@ -41,7 +41,7 @@ import {
 // Holds the site to what it describes: the CLI's help, the install
 // instructions verifyInstall runs, and the documents in the repository.
 // Whether those instructions work is tested where the package is packed, in
-// @adrianeyre/xray's tests, and after each release by the Release workflow.
+// @adrianeyre/xray's tests, and after each release by the CI workflow.
 
 const page = renderPage(await readDocumentation());
 

@@ -29,7 +29,7 @@ Then open `packages/site/dist/index.html`. It links its own files relatively, so
 
 ## The screenshots
 
-The pictures of the UI are [captured](../../packages/site/src/capture-screenshots.ts) from `xray ui` itself, in headless Chromium, reconstructing two Fixtures: the wpf Fixture, a Full Reconstruction, for the animation, the pipeline and the Recovered Solution, and the missing-reference Fixture, a Partial one. They are committed, so the Pages workflow needs neither .NET nor a browser. When the UI changes, capture them again:
+The pictures of the UI are [captured](../../packages/site/src/capture-screenshots.ts) from `xray ui` itself, in headless Chromium, reconstructing two Fixtures: the wpf Fixture, a Full Reconstruction, for the animation, the pipeline and the Recovered Solution, and the missing-reference Fixture, a Partial one. They are committed, so building the site in CI needs neither .NET nor a browser. When the UI changes, capture them again:
 
 ```bash
 pnpm build:engine
@@ -63,7 +63,7 @@ A link to the repository on GitHub, rather than to the site, unfurls with the re
 
 ## How it is published
 
-The [Pages workflow](../../.github/workflows/pages.yml) builds the site and deploys it to GitHub Pages on every push to `main`. It can also be run by hand, from the repository's _Actions_ tab.
+The [CI workflow](../../.github/workflows/ci.yml) builds the site and deploys it to GitHub Pages on every push to `main`, once the checks on every OS pass. It can also be run by hand on `main`, from the repository's _Actions_ tab.
 
 ---
 
@@ -72,7 +72,7 @@ The [Pages workflow](../../.github/workflows/pages.yml) builds the site and depl
 The instructions are run as they are written, by [`verify-install.ts`](../../packages/site/src/verify-install.ts): `pnpm add -g @adrianeyre/xray` into a `PNPM_HOME` of their own, as on a machine that has never installed Xray, then `xray doctor`, which must pass; then `xray --help` must print the site's CLI reference. They are run:
 
 - **Before a version is published**, by `@adrianeyre/xray`'s tests, against the tarball `pnpm publish` would upload, in place of the package's name, on Windows, macOS and Linux in CI.
-- **Once a version is published**, by the [Verify install workflow](../../.github/workflows/verify-install.yml), against that version on npm, on Windows, macOS and Linux. The Release workflow runs it after it publishes; run it by hand, from the _Actions_ tab, to check a version already on npm, such as the first one, which is published by hand ([Releasing](releasing.md)).
+- **Once a version is published**, by the [CI workflow](../../.github/workflows/ci.yml)'s `verify-install` job, against that version on npm, on Windows, macOS and Linux. It runs after the workflow releases a version; to check a version already on npm, such as the first one, which is published by hand ([Releasing](releasing.md)), run the CI workflow by hand, from the _Actions_ tab, with that version as _verify-install_.
 
 To run them on this machine, against the version npm tags `latest`, or with `--package`, a version or a tarball in its place:
 
@@ -85,6 +85,6 @@ pnpm --filter @xray/site verify-install --package @adrianeyre/xray@1.0.0
 
 ## Setting up, once
 
-By an owner of the repository: in its _Settings → Pages_, under _Build and deployment_, set _Source_ to _GitHub Actions_. Then run the Pages workflow, or push to `main`.
+By an owner of the repository: in its _Settings → Pages_, under _Build and deployment_, set _Source_ to _GitHub Actions_. Then run the CI workflow on `main`, or push to `main`.
 
 It is published at its own domain, [xray.adrianeyre.co.uk](https://xray.adrianeyre.co.uk/): `SITE_DOMAIN` in [`project.ts`](../../packages/site/src/project.ts), which `pnpm build:site` writes to the site's `CNAME`. Once, in the DNS for `adrianeyre.co.uk`, add a `CNAME` record from `xray` to `adrianeyre.github.io`; then, in the repository's **Settings → Pages**, set **Custom domain** to `xray.adrianeyre.co.uk` and, once GitHub has issued its certificate, tick **Enforce HTTPS**.

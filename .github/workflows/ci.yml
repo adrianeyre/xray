@@ -1,14 +1,29 @@
-# Install, lint, typecheck and test on every OS Xray supports (PRD §8, §9).
+# The one workflow: on every pull request, install, lint, typecheck and test
+# on every OS Xray supports (PRD §8, §9); then, on a push to main once those
+# pass, publish the project site to GitHub Pages and release @adrianeyre/xray.
+# docs/processes/project-site.md and docs/processes/releasing.md say how, and
+# what has to be set up first.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      verify-install:
+        description: >-
+          A version of @adrianeyre/xray on npm to run the install instructions
+          against, on every OS, instead of the rest of the workflow; empty to
+          run the workflow, and publish the site from main.
+        type: string
+        default: ""
 
-permissions:
-  contents: read
+# None by default; each job asks for only what it needs.
+permissions: {}
 
+# A pull request's newer push cancels its older run; on main, a run waits for
+# the one before it, never cancelled half-way through publishing.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -20,6 +35,9 @@ env:
 jobs:
   check:
     name: ${{ matrix.os }}
+    if: inputs.verify-install == ''
+    permissions:
+      contents: read
     strategy:
       # Let every OS report, so a platform-specific failure is not hidden by
       # another OS cancelling it.
@@ -35,6 +53,8 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       # Versions come from package.json: pnpm from `packageManager`, Node from
       # `devEngines.runtime`. pnpm goes first so setup-node can cache its store.
@@ -58,8 +78,11 @@ jobs:
           restore-keys: nuget-${{ runner.os }}-
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
+      # Neither depends on the OS, so once is enough.
+      - if: runner.os == 'Linux'
+        run: pnpm lint
+      - if: runner.os == 'Linux'
+        run: pnpm typecheck
 
       # The engine sidecar (ADR 0001). Built on its own so a compile error shows
       # as one, then its .NET unit tests. `pnpm test` drives the built engine.
@@ -70,8 +93,9 @@ jobs:
       # a compile error shows as one.
       - run: pnpm build:web
 
-      # The project site the Pages workflow publishes, built as it builds it.
-      - run: pnpm build:site
+      # The project site, built as the pages job builds it; no test needs it.
+      - if: runner.os == 'Linux'
+        run: pnpm build:site
 
       # Every Fixture, built as the tests build them (fixtures/README.md), so one
       # that does not compile on this OS fails here rather than inside a test.
@@ -81,108 +105,13 @@ jobs:
       # xray ui and a Round-trip with it, on this OS.
       - run: pnpm test
 
-  # The engine on the newest .NET SDK, as well as on 8, the floor `check`
-  # builds with: it compiles with `LangVersion` latest, so a newer SDK's C#
-  # can bind the same code differently (C# 14's first-class spans made
-  # `array.Reverse()` the in-place, void MemoryExtensions.Reverse).
-  engine-sdk-10:
-    name: engine (.NET SDK 10)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-dotnet@v6
-        id: dotnet
-        with:
-          dotnet-version: 10.0.x
-      # Pin the SDK just installed, rather than any newer one on the runner.
-      - run: dotnet new globaljson --sdk-version "${{ steps.dotnet.outputs.dotnet-version }}" --output engine
-      - run: dotnet build engine/Xray.Engine --configuration Release
-      - run: dotnet test engine
-
-  # The benchmark of PRD §8 (docs/reference/benchmark.md): a Reconstruction of
-  # the benchmark Fixture, an Assembly of about 2,000 types and 5 MB, in under
-  # 60 s excluding `dotnet build`, reporting its progress at least once a
-  # second. Tracked on every run, in its summary and as an artifact, but never
-  # blocking: a shared runner is slower than a developer's laptop, and its
-  # speed varies from run to run.
-  benchmark:
-    name: benchmark
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    timeout-minutes: 30
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: package.json
-          cache: pnpm
-      - uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: 8.0.x
-      - uses: actions/cache@v6
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '**/packages.lock.json') }}
-          restore-keys: nuget-${{ runner.os }}-
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build:engine
-      # bash runs with pipefail, so a missed target still fails the step.
-      - run: pnpm --silent benchmark --json benchmark.json | tee -a "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: benchmark
-          path: benchmark.json
-          if-no-files-found: ignore
-
-  # The smoke test against a real application (PRD §3, scenario 1;
-  # docs/reference/real-app.md): AwsWatchman's Assemblies as released,
-  # downloaded from nuget.org, reconstructed and built with NuGet lookups on,
-  # and checked against the outcome expected of them, reference by reference;
-  # then the original and the rebuilt app are run over the same inputs and
-  # must behave identically. On every OS, and blocking: a change to that
-  # outcome is a regression, or a gap closed, whose expectation is then
-  # updated.
-  real-app:
-    name: real app (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: package.json
-          cache: pnpm
-      - uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: 8.0.x
-      # Restored, never saved: this job's Reconstruction restores packages of
-      # its own, which the cache `check` restores must not gain.
-      - uses: actions/cache/restore@v6
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '**/packages.lock.json') }}
-          restore-keys: nuget-${{ runner.os }}-
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build:engine
+      # The smoke test against a real application (PRD §3, scenario 1;
+      # docs/reference/real-app.md): AwsWatchman's Assemblies as released,
+      # downloaded from nuget.org, reconstructed and built with NuGet lookups
+      # on, and checked against the outcome expected of them, reference by
+      # reference; then the original and the rebuilt app are run over the same
+      # inputs and must behave identically. Blocking: a change to that outcome
+      # is a regression, or a gap closed, whose expectation is then updated.
       # bash runs with pipefail, so a result not as expected fails the step.
       - run: pnpm --silent real-app --json real-app.json | tee -a "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
@@ -191,3 +120,234 @@ jobs:
           name: real-app-${{ matrix.os }}
           path: real-app.json
           if-no-files-found: ignore
+
+      # The benchmark of PRD §8 (docs/reference/benchmark.md): a
+      # Reconstruction of the benchmark Fixture, an Assembly of about 2,000
+      # types and 5 MB, in under 60 s excluding `dotnet build`, reporting its
+      # progress at least once a second. Tracked, in the summary and as an
+      # artifact, but never blocking: a shared runner is slower than a
+      # developer's laptop, and its speed varies from run to run.
+      - if: runner.os == 'Linux'
+        id: benchmark
+        continue-on-error: true
+        run: pnpm --silent benchmark --json benchmark.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always() && runner.os == 'Linux'
+        with:
+          name: benchmark
+          path: benchmark.json
+          if-no-files-found: ignore
+
+      # The engine on the newest .NET SDK, as well as on 8: it compiles with
+      # `LangVersion` latest, so a newer SDK's C# can bind the same code
+      # differently (C# 14's first-class spans made `array.Reverse()` the
+      # in-place, void MemoryExtensions.Reverse). Last, as it pins the SDK.
+      - if: runner.os == 'Linux'
+        uses: actions/setup-dotnet@v6
+        id: dotnet10
+        with:
+          dotnet-version: 10.0.x
+      - if: runner.os == 'Linux'
+        run: |
+          dotnet new globaljson --sdk-version "${{ steps.dotnet10.outputs.dotnet-version }}" --output engine
+          dotnet build engine/Xray.Engine --configuration Release
+          dotnet test engine
+
+  # The project site (packages/site) on GitHub Pages, from main: what Xray is,
+  # its UI, how to install it, its CLI reference and its documentation. Pages
+  # hosts the project site only, never the app (PRD §4; ADR 0003). Built
+  # afresh, with no cache another run could have written into what is
+  # deployed.
+  pages:
+    name: Build the site
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      # The page, from the CLI's help, the install instructions and docs/, with
+      # its stylesheet and the screenshots of the UI committed beside it.
+      - run: pnpm build:site
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: packages/site/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
+
+  # Versions and publishes @adrianeyre/xray with semantic-release (PRD §9),
+  # from the Conventional Commits since the last release: works out the next
+  # version, if any; tests the package at that version as users install it;
+  # commits the version and the changelog back to main with [skip ci], and
+  # tags it; publishes the tarball to npm with trusted publishing; creates the
+  # GitHub release, carrying downloads for Windows, macOS and Linux that run
+  # without Node.js installed. release.config.js holds its configuration.
+  release:
+    name: Release
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      # The version published, or empty when nothing was released.
+      version: ${{ steps.release.outputs.version }}
+    permissions:
+      # Commits the version and changelog, pushes the tag, and creates the
+      # GitHub release.
+      contents: write
+      # Comments on the issues and pull requests a release includes.
+      issues: write
+      pull-requests: write
+      # npm trusted publishing: no token, and provenance for each version.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Every commit and tag, for semantic-release to find the last release
+          # and the commits since. It pushes with GITHUB_TOKEN itself.
+          fetch-depth: 0
+          persist-credentials: false
+      # Version 1.0.0 is published, and tagged, by hand, as npm lets a trusted
+      # publisher be added only to a package that exists already; until then,
+      # the workflow would tag a version it cannot publish.
+      - id: ready
+        run: |
+          if [ -n "$(git tag --list 'v*')" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Nothing is released until 1.0.0 is published and tagged v1.0.0 by hand: docs/processes/releasing.md#setting-up-once."
+          fi
+      - if: steps.ready.outputs.ready == 'true'
+        uses: pnpm/action-setup@v6
+      # No registry-url: its .npmrc would stand in the way of trusted publishing.
+      - if: steps.ready.outputs.ready == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          package-manager-cache: false
+      # The package bundles the engine, published with the .NET SDK.
+      - if: steps.ready.outputs.ready == 'true'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - if: steps.ready.outputs.ready == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.ready.outputs.ready == 'true'
+        id: release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The install instructions the project site and the README give, run as
+  # written, on every OS: against the version just released, or, run by hand,
+  # the one asked for. `pnpm add -g` into a PNPM_HOME of its own, then
+  # `xray doctor`, then checks `xray --help` is the site's CLI reference.
+  verify-install:
+    name: install (${{ matrix.os }})
+    needs: release
+    if: >-
+      !cancelled() &&
+      (needs.release.outputs.version != '' || inputs.verify-install != '')
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          package-manager-cache: false
+      # What the instructions say a user needs: xray doctor checks it.
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - run: pnpm install --frozen-lockfile
+      # The version is pinned, as npm's `latest` tag can take a moment to reach
+      # every mirror after a release; the commands are otherwise as written.
+      # bash runs with pipefail, so instructions that do not work fail the step.
+      - env:
+          VERSION: ${{ needs.release.outputs.version || inputs.verify-install }}
+        run: pnpm --silent --filter @xray/site verify-install --package "@adrianeyre/xray@$VERSION" | tee -a "$GITHUB_STEP_SUMMARY"
+
+  # The downloads the GitHub release carries, as a user gets them: downloaded
+  # from the release, checked against its SHA256SUMS.txt, unpacked, and run on
+  # their own OS, with nothing but the .NET SDK installed, as their README says.
+  verify-downloads:
+    name: download (${{ matrix.target }})
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: win-x64
+            archive: zip
+          - os: macos-latest
+            target: darwin-arm64
+            archive: tar.gz
+          - os: ubuntu-latest
+            target: linux-x64
+            archive: tar.gz
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ needs.release.outputs.version }}
+          TARGET: ${{ matrix.target }}
+          ARCHIVE: ${{ matrix.archive }}
+        run: |
+          file="xray-$TARGET.$ARCHIVE"
+          name="xray-$VERSION-$TARGET"
+          gh release download "v$VERSION" --repo "$REPOSITORY" --pattern "$file" --pattern SHA256SUMS.txt
+          # shasum is on every runner; sha256sum is not on macOS.
+          grep "  $file\$" SHA256SUMS.txt | shasum --algorithm 256 --check -
+          if [ "$ARCHIVE" = zip ]; then unzip -q "$file"; else tar -xzf "$file"; fi
+          if [ "$TARGET" = win-x64 ]; then xray=("cmd" "//c" "$name\\xray.cmd"); else xray=("$name/xray"); fi
+          "${xray[@]}" --help | grep "Usage: xray <command>" > /dev/null
+          "${xray[@]}" doctor | tee -a "$GITHUB_STEP_SUMMARY"

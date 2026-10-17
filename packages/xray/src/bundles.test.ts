@@ -13,7 +13,7 @@ import {
 } from "./bundles.js";
 
 // The downloads each GitHub release carries, as bundle.ts names and lays them
-// out. That each one runs is checked by the Release workflow, on each OS, once
+// out. That each one runs is checked by the CI workflow, on each OS, once
 // they are attached to the release.
 
 /** The target named `name`. */

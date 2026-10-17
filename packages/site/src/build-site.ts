@@ -1,5 +1,5 @@
 // `pnpm build:site`: writes the project site to packages/site/dist/, which the
-// Pages workflow publishes.
+// CI workflow publishes to GitHub Pages.
 
 import { SITE_DIRECTORY, buildSite } from "./site.js";
 

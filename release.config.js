@@ -1,6 +1,6 @@
 // @ts-check
-// semantic-release's configuration: how the Release workflow
-// (.github/workflows/release.yml) versions and publishes @adrianeyre/xray
+// semantic-release's configuration: how the release job of the CI workflow
+// (.github/workflows/ci.yml) versions and publishes @adrianeyre/xray
 // from the Conventional Commits merged to main. docs/processes/releasing.md
 // says how a release happens, and what has to be set up first.
 //
@@ -61,7 +61,7 @@ export default {
         // stored anywhere, and gives the version provenance.
         publishCmd:
           'cd "$RUNNER_TEMP" && npm publish "$RUNNER_TEMP/xray-release/adrianeyre-xray-${nextRelease.version}.tgz" --access public --provenance',
-        // Tells the Release workflow which version to verify the install of.
+        // Tells the CI workflow which version to verify the install of.
         successCmd: 'echo "version=${nextRelease.version}" >> "$GITHUB_OUTPUT"',
       },
     ],

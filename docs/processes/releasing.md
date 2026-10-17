@@ -7,7 +7,7 @@ pnpm add -g @adrianeyre/xray
 xray doctor
 ```
 
-Its versions are worked out from the repository's commit messages, and published, by [semantic-release](https://semantic-release.gitbook.io), in the [Release workflow](../../.github/workflows/release.yml), configured in [`release.config.js`](../../release.config.js). This file says what is in the package, how a change reaches it, and what has to be set up by hand, once.
+Its versions are worked out from the repository's commit messages, and published, by [semantic-release](https://semantic-release.gitbook.io), in the `release` job of the [CI workflow](../../.github/workflows/ci.yml), configured in [`release.config.js`](../../release.config.js). This file says what is in the package, how a change reaches it, and what has to be set up by hand, once.
 
 ---
 
@@ -48,9 +48,9 @@ Each GitHub release also carries a download of Xray for each OS and architecture
 | `xray-linux-x64.tar.gz`, `xray-linux-arm64.tar.gz` | Linux, on x64 and Arm64 |
 | `SHA256SUMS.txt` | The SHA-256 of each |
 
-Each unpacks to a folder, `xray-<version>-<platform>/`, holding the package as npm installs it, with its dependencies (`app/`); the Node.js the Release workflow runs on, for that platform, from nodejs.org, checked against its SHA-256, with its licence (`runtime/`); a launcher, `xray` or `xray.cmd`; and a `README.txt` saying how to run it. They still need the .NET SDK, which builds what Xray recovers. Their names carry no version, so `https://github.com/adrianeyre/xray/releases/latest/download/<file>`, which the project site links, always gets the latest.
+Each unpacks to a folder, `xray-<version>-<platform>/`, holding the package as npm installs it, with its dependencies (`app/`); the Node.js the release job runs on, for that platform, from nodejs.org, checked against its SHA-256, with its licence (`runtime/`); a launcher, `xray` or `xray.cmd`; and a `README.txt` saying how to run it. They still need the .NET SDK, which builds what Xray recovers. Their names carry no version, so `https://github.com/adrianeyre/xray/releases/latest/download/<file>`, which the project site links, always gets the latest.
 
-`bundle.ts` runs the download for the machine it is on before archiving it; once they are attached to the release, the Release workflow downloads the Windows x64, macOS Apple silicon and Linux x64 ones from it, checks each against `SHA256SUMS.txt`, and runs `xray --help` and `xray doctor` with each on its own OS. To write them yourself, from a tarball, with `tar` and `zip` on your `PATH`:
+`bundle.ts` runs the download for the machine it is on before archiving it; once they are attached to the release, the CI workflow downloads the Windows x64, macOS Apple silicon and Linux x64 ones from it, checks each against `SHA256SUMS.txt`, and runs `xray --help` and `xray doctor` with each on its own OS. To write them yourself, from a tarball, with `tar` and `zip` on your `PATH`:
 
 ```bash
 pnpm --filter @adrianeyre/xray pack --pack-destination ../..
@@ -78,19 +78,19 @@ A change that does not reach users, such as to tests, CI or docs, takes a type t
 
 ## How a release happens
 
-On every push to `main`, the Release workflow runs semantic-release, which:
+On every push to `main`, once the checks on every OS pass, the CI workflow's `release` job runs semantic-release, which:
 
 1. Finds the last release, the latest tag `v<version>` on `main`, and reads the commits since. If none of them releases anything, it stops.
 2. Works out the next version from them, and checks that npm does not have it already.
 3. Writes it to `packages/xray/package.json`, and the release notes to the top of `packages/xray/CHANGELOG.md`.
 4. Tests the package at that version, as CI does (`pnpm --filter @adrianeyre/xray test`), then packs it with `pnpm pack`, which builds it, and writes [the downloads](#the-downloads) from what it packed. A failing test stops the release here, before anything is committed, tagged or published.
-5. Commits `packages/xray/package.json` and `packages/xray/CHANGELOG.md` to `main` as `chore(release): <version> [skip ci]`, and tags that commit `v<version>`. `[skip ci]` stops the commit starting the workflows again.
+5. Commits `packages/xray/package.json` and `packages/xray/CHANGELOG.md` to `main` as `chore(release): <version> [skip ci]`, and tags that commit `v<version>`. `[skip ci]` stops the commit starting the workflow again.
 6. Publishes the tarball to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers): `npm publish`, with no token, and with provenance.
 7. Creates the GitHub release `v<version>`, with the release notes and the downloads attached, and comments on the issues and pull requests it includes.
 
-Then it runs the install instructions, as written, against that version on npm, on Windows, macOS and Linux, with the [Verify install workflow](../../.github/workflows/verify-install.yml) (see [The project site](project-site.md#how-the-install-instructions-are-verified)), and runs the downloads, each on its own OS.
+Then it runs the install instructions, as written, against that version on npm, on Windows, macOS and Linux, with its `verify-install` job (see [The project site](project-site.md#how-the-install-instructions-are-verified)), and runs the downloads, each on its own OS.
 
-Version 1.0.0 is published by hand (see below), so the first version the workflow publishes is the one after it.
+Version 1.0.0 is published by hand (see below), so the first version the workflow publishes is the one after it. Until there is a `v*` tag, the release job releases nothing, and says so.
 
 To see what the next release would be, without releasing it, from an up-to-date `main`, with a GitHub token that can push to the repository:
 
@@ -123,9 +123,9 @@ These are done by hand, by an owner of the repository and of the package on npm,
    gh release create v1.0.0 --verify-tag --title v1.0.0 --notes-file release-notes.md
    ```
 
-   Then run the Verify install workflow by hand, from the repository's _Actions_ tab, with version `1.0.0`, to check the install instructions against it on every OS.
+   Then run the CI workflow by hand, from the repository's _Actions_ tab, with _verify-install_ `1.0.0`, to check the install instructions against it on every OS.
 
-3. **Add the trusted publisher.** On npmjs.com, in `@adrianeyre/xray`'s _Settings → Trusted publishing_, add GitHub Actions: owner `adrianeyre`, repository `xray`, workflow `release.yml`, no environment. Every later version is published by the workflow.
+3. **Add the trusted publisher.** On npmjs.com, in `@adrianeyre/xray`'s _Settings → Trusted publishing_, add GitHub Actions: owner `adrianeyre`, repository `xray`, workflow `ci.yml`, no environment. Every later version is published by the workflow.
 4. **Let the workflow push to `main`.** It commits each release's version and changelog to `main`, and pushes its tag, with the workflow's own `GITHUB_TOKEN`. Should `main` be protected, by a branch protection rule or a ruleset, that needs pull requests or status checks, let GitHub Actions bypass it (in a ruleset's _Bypass list_, add the _GitHub Actions_ app); else the release fails at step 5, having published nothing. Should tags be protected, let it create `v*` tags likewise. No other secret is needed: npm is published to with trusted publishing, and GitHub with `GITHUB_TOKEN`.
 
 Should the repository be renamed again, change the trusted publisher's repository, and the `repository`, `homepage` and `bugs` URLs in `packages/xray/package.json`, to match: npm checks a version's provenance against them.
