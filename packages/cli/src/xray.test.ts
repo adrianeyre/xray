@@ -1067,7 +1067,13 @@ describe("the xray binary", () => {
     const result = await xray(["doctor"]);
 
     expect(result.stderr).toBe("");
-    expect(result.stdout).toMatch(/^PASS {2}Node\.js {6}26\.10\.0$/m);
+    // The Node.js running these tests, which runs the binary too.
+    expect(result.stdout).toMatch(
+      new RegExp(
+        `^PASS {2}Node\\.js {6}${process.versions.node.replaceAll(".", "\\.")}$`,
+        "m",
+      ),
+    );
     expect(result.stdout).toMatch(/^PASS {2}\.NET SDK {5}(\d+)\.\d+\.\d+/m);
     expect(result.stdout).toMatch(/^PASS {2}Xray engine {2}0\.0\.0/m);
     expect(result.stdout).toMatch(/All 3 checks passed\.\n$/);

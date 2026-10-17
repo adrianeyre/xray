@@ -217,11 +217,15 @@ describe("startServer", () => {
       async () => {
         const server = await start();
 
-        for (const address of externalAddresses()) {
-          expect(await tryConnect(address, server.port), address).not.toBe(
-            "connected",
-          );
-        }
+        // All at once: a machine may have dozens, each of which can take the
+        // whole connect timeout to refuse.
+        const addresses = externalAddresses();
+        const results = await Promise.all(
+          addresses.map((address) => tryConnect(address, server.port)),
+        );
+        addresses.forEach((address, i) => {
+          expect(results[i], address).not.toBe("connected");
+        });
       },
     );
 
