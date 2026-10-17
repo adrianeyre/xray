@@ -1,0 +1,128 @@
+[
+  {
+    "args": ["order", "7", "hammer", "saw"],
+    "expected": {
+      "stdout": [
+        "[INF] Writing order 7 with 2 items { App: \"NuGetDependencies\" }",
+        "{",
+        "  \"id\": 7,",
+        "  \"items\": [",
+        "    \"hammer\",",
+        "    \"saw\"",
+        "  ],",
+        "  \"placed\": \"2026-10-08T09:30:00Z\"",
+        "}"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "read",
+      "{\"id\":7,\"items\":[\"hammer\",\"hoe\"],\"placed\":\"2026-10-08T09:30:00Z\",\"gift\":true}"
+    ],
+    "expected": {
+      "stdout": [
+        "[INF] Read {\"Id\":7,\"Items\":[\"hammer\",\"hoe\"],\"Placed\":\"2026-10-08T09:30:00.0000000Z\",\"Gift\":true,\"Summary\":\"7: hammer, hoe\",\"$type\":\"Order\"} { App: \"NuGetDependencies\" }",
+        "id: Integer",
+        "items: Array",
+        "placed: Date",
+        "gift: Boolean",
+        "A gift."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "read",
+      "{\"id\":8,\"items\":[],\"placed\":\"2026-01-02T03:04:05Z\"}"
+    ],
+    "expected": {
+      "stdout": [
+        "[INF] Read {\"Id\":8,\"Items\":[],\"Placed\":\"2026-01-02T03:04:05.0000000Z\",\"Gift\":false,\"Summary\":\"8: \",\"$type\":\"Order\"} { App: \"NuGetDependencies\" }",
+        "id: Integer",
+        "items: Array",
+        "placed: Date",
+        "Not a gift."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["read", "{\"items\":[]}"],
+    "expected": {
+      "stdout": [
+        "[ERR] Could not read the order: Required property 'id' not found in JSON. Path '', line 1, position 12. { App: \"NuGetDependencies\" }"
+      ],
+      "stderr": ["Invalid order: JsonSerializationException"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["read", "{\"id\":"],
+    "expected": {
+      "stdout": [
+        "[ERR] Could not read the order: Unexpected end when setting id's value. Path 'id', line 1, position 6. { App: \"NuGetDependencies\" }"
+      ],
+      "stderr": ["Invalid order: JsonSerializationException"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["log", "3"],
+    "expected": {
+      "stdout": [
+        "[DBG] Step 1 of 3 { App: \"NuGetDependencies\" }",
+        "[DBG] Step 2 of 3 { App: \"NuGetDependencies\" }",
+        "[DBG] Step 3 of 3 { App: \"NuGetDependencies\" }",
+        "[WRN] Done after 3 steps { Count: 3, App: \"NuGetDependencies\" }"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["log", "0"],
+    "expected": {
+      "stdout": [
+        "[WRN] Done after 0 steps { Count: 0, App: \"NuGetDependencies\" }"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: NuGetDependencies order <id> <item>... | read <json> | log <count>"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["log", "-1"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: NuGetDependencies order <id> <item>... | read <json> | log <count>"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["order", "x", "hammer"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: NuGetDependencies order <id> <item>... | read <json> | log <count>"
+      ],
+      "exitCode": 1
+    }
+  }
+]

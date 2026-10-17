@@ -1,0 +1,198 @@
+[
+  {
+    "args": ["framework"],
+    "expected": {
+      "stdout": ["Gradebook: CLR v2.0.50727, System.Core 3.5.0.0"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["report"],
+    "expected": {
+      "stdout": [
+        "Recorded 15 marks, 3 absent.",
+        "Grading: Letter",
+        "Ada (7A): 91.7% A [Honours, Improving]",
+        "Ben (7A): 58.0% C [Improving]",
+        "Cal (7B): 46.0% D [Improving, AtRisk]",
+        "Dee (7B): 81.0% B [None]",
+        "Eli (7A): 85.0% A [Honours]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["report", "passfail"],
+    "expected": {
+      "stdout": [
+        "Recorded 15 marks, 3 absent.",
+        "Grading: Pass/fail at 50.0%",
+        "Ada (7A): 91.7% Pass [Honours, Improving]",
+        "Ben (7A): 58.0% Pass [Improving]",
+        "Cal (7B): 46.0% Fail [Improving, AtRisk]",
+        "Dee (7B): 81.0% Pass [None]",
+        "Eli (7A): 85.0% Pass [Honours]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["forms"],
+    "expected": {
+      "stdout": [
+        "7A: 3 students, mean 78.2%, best Ada 91.7% (A)",
+        "7B: 2 students, mean 63.5%, best Dee 81.0% (B)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["top", "2"],
+    "expected": {
+      "stdout": ["1. Ada 91.7%", "2. Eli 85.0%"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["top", "9"],
+    "expected": {
+      "stdout": [
+        "1. Ada 91.7%",
+        "2. Eli 85.0%",
+        "3. Dee 81.0%",
+        "4. Ben 58.0%",
+        "5. Cal 46.0%"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["top", "0"],
+    "expected": {
+      "stdout": ["Nobody."],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["top", "-1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Counts and marks must stay in range."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["top", "two"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Operands must be whole numbers."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["curve", "5"],
+    "expected": {
+      "stdout": [
+        "Ada: 91.7% -> 96.7% A",
+        "Ben: 58.0% -> 63.0% C",
+        "Cal: 46.0% -> 51.0% D",
+        "Dee: 81.0% -> 86.0% A",
+        "Eli: 85.0% -> 90.0% A"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["curve", "10"],
+    "expected": {
+      "stdout": [
+        "Ada: 91.7% -> 100.0% A",
+        "Ben: 58.0% -> 68.0% C",
+        "Cal: 46.0% -> 56.0% C",
+        "Dee: 81.0% -> 91.0% A",
+        "Eli: 85.0% -> 95.0% A"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["curve", "-50"],
+    "expected": {
+      "stdout": ["Ada: 91.7% -> 41.7% D", "Ben: 58.0% -> 8.0% F"],
+      "stderr": ["Counts and marks must stay in range."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["curve"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Operands must be whole numbers."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["student", "cal"],
+    "expected": {
+      "stdout": [
+        "Cal (7B)",
+        "Marks: 40, 52, absent, absent",
+        "Average: 46.0% D",
+        "Standing: Improving, AtRisk"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["student", "Ada"],
+    "expected": {
+      "stdout": [
+        "Ada (7A)",
+        "Marks: 92, 88, 95",
+        "Average: 91.7% A",
+        "Standing: Honours, Improving"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["student", "Zed"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No student named Zed."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Net35Library <framework|report|forms|top|curve|student> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["grades"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"grades\".",
+        "Usage: Net35Library <framework|report|forms|top|curve|student> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  }
+]

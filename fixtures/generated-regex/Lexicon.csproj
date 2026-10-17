@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Source generators beside the language (PRD FR-7): a .NET 8 console app
+    whose regular expressions are [GeneratedRegex] methods, each declared
+    partial, for the regex source generator to implement as it is built. The
+    generator writes each method's body and a Regex of its own, in a file of
+    its own, as ordinary code; a Reconstruction must declare each method as it
+    was written again, and leave that code to the generator to write again.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

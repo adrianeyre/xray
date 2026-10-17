@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET Framework 4.8 WPF app (PRD FR-12, FR-14), written as Visual Studio
+    writes one for .NET Framework, in C# 7.3: each XAML file a Page beside its
+    code-behind, which the markup compiler compiles to BAML in
+    Swatches.g.resources, and App.xaml the ApplicationDefinition it generates
+    Main from. Its windows bind to a view model rather than handle events:
+    MainWindow.xaml makes one its DataContext, binds sliders to it both ways,
+    a TextBox as each key is typed, a Button to its command, a ListBox to its
+    saved swatches through a DataTemplate, a preview's brush through a
+    converter App.xaml declares, and text by ElementName, RelativeSource and
+    StringFormat; and it shows PreviewWindow.xaml, a second window it owns
+    with the same DataContext. Controls/SwatchChip.xaml is a UserControl
+    binding to its own dependency property. Themes/Styles.xaml, merged by
+    App.xaml, holds implicit and keyed styles, a Trigger, a DataTrigger and a
+    ControlTemplate; and Assets/swatches.png, the windows' icon, named by a
+    pack URI, is a Resource. SDK-style, as every Recovered Solution is
+    (ADR 0004), so it builds on any OS against the framework's reference
+    assemblies; it runs only on Windows.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Swatches</AssemblyName>
+    <RootNamespace>Swatches</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\swatches.png" />
+  </ItemGroup>
+
+</Project>

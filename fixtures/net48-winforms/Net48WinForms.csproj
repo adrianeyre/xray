@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET Framework 4.8 Windows Forms app (PRD FR-12, FR-14), written as
+    Visual Studio's designer writes one for .NET Framework, in C# 7.3: a form
+    whose InitializeComponent builds its controls, a ToolTip in its components
+    container and the event handlers they call, and whose .resx holds its icon
+    and the image of a PictureBox, a System.Drawing.Icon and a
+    System.Drawing.Bitmap, read back by a ComponentResourceManager as it is
+    built. SDK-style, as every Recovered Solution is (ADR 0004), so it builds
+    on any OS against the framework's reference assemblies; it runs only on
+    Windows. `dotnet build`, on any OS, builds a .resx holding anything but
+    strings only into a .resources file that System.Resources.Extensions reads
+    (GenerateResourceUsePreserializedResources), so the app references its
+    package, which is copied beside it, and a binding redirect to it written
+    into its .exe.config.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Stopwatch</AssemblyName>
+    <RootNamespace>Stopwatch</RootNamespace>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+<Window x:Class="Tally.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Tally.Controls"
+        Title="Tally" Width="360" Height="240"
+        Icon="Assets/tally.png"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="StepButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinWidth" Value="48" />
+            <EventSetter Event="MouseDoubleClick" Handler="StepButton_MouseDoubleClick" />
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="{StaticResource Gutter}">
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource Heading}" Text="Tally" />
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="decrementButton" Style="{StaticResource StepButton}" Content="-" Click="DecrementButton_Click" />
+            <Button x:Name="incrementButton" Style="{StaticResource StepButton}" Content="+" Click="IncrementButton_Click" />
+            <Button Content="Reset" Click="ResetButton_Click" />
+        </StackPanel>
+        <TextBox x:Name="stepBox" DockPanel.Dock="Right" Width="48" VerticalAlignment="Center" Text="1" TextChanged="StepBox_TextChanged" />
+        <controls:CountBadge x:Name="badge" Count="0" />
+    </DockPanel>
+</Window>

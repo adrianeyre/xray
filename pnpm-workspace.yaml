@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+  - fixtures
+
+# Tool versions shared by the root and every package, so they cannot drift apart.
+catalog:
+  '@types/node': ~26.6.5
+  typescript: ~6.0.3
+  vitest: ^5.0.4
+
+# tsx depends on esbuild, whose postinstall fetches its platform binary.
+allowBuilds:
+  esbuild: true

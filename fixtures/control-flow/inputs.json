@@ -1,0 +1,298 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: ControlFlow <loops|switch|exceptions> [operands...]"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: ControlFlow <loops|switch|exceptions> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["loops", "10", "27", "97"],
+    "expected": {
+      "stdout": [
+        "n = 10",
+        "  for: 1 + ... + 10 = 55",
+        "  while: collatz(10) reaches 1 in 6 steps",
+        "  do-while: 10 reversed is 01",
+        "  foreach: odd squares below 10: 1, 9",
+        "  goto: 10 = 2 * 5",
+        "  for (two variables): 0 and 10 meet after 5 steps, at 5 and 5",
+        "n = 27",
+        "  for: 1 + ... + 27 = 378",
+        "  while: collatz(27) reaches 1 in 111 steps",
+        "  do-while: 27 reversed is 72",
+        "  foreach: odd squares below 27: 1, 9, 25",
+        "  goto: 27 = 3 * 9",
+        "  for (two variables): 0 and 27 meet after 14 steps, at 14 and 13",
+        "n = 97",
+        "  for: 1 + ... + 97 = 4753",
+        "  while: collatz(97) reaches 1 in 118 steps",
+        "  do-while: 97 reversed is 79",
+        "  foreach: odd squares below 97: 1, 9, 25, 49, 81",
+        "  goto: 97 is prime",
+        "  for (two variables): 0 and 97 meet after 49 steps, at 49 and 48"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["loops", "1", "0", "-15", "-2147483648"],
+    "expected": {
+      "stdout": [
+        "n = 1",
+        "  for: 1 + ... + 1 = 1",
+        "  while: collatz(1) reaches 1 in 0 steps",
+        "  do-while: 1 reversed is 1",
+        "  foreach: no odd squares below 1",
+        "  goto: 1 has no factors to find",
+        "  for (two variables): 0 and 1 meet after 1 steps, at 1 and 0",
+        "n = 0",
+        "  for: 1 + ... + 0 = 0",
+        "  while: collatz(0) is not defined",
+        "  do-while: 0 reversed is 0",
+        "  foreach: no odd squares below 0",
+        "  goto: 0 has no factors to find",
+        "  for (two variables): 0 and 0 meet after 0 steps, at 0 and 0",
+        "n = -15",
+        "  for: 1 + ... + -15 = 0",
+        "  while: collatz(-15) is not defined",
+        "  do-while: -15 reversed is -51",
+        "  foreach: no odd squares below -15",
+        "  goto: -15 has no factors to find",
+        "  for (two variables): 0 and -15 meet after 0 steps, at 0 and -15",
+        "n = -2147483648",
+        "  for: 1 + ... + -2147483648 = 0",
+        "  while: collatz(-2147483648) is not defined",
+        "  do-while: -2147483648 reversed is -8463847412",
+        "  foreach: no odd squares below -2147483648",
+        "  goto: -2147483648 has no factors to find",
+        "  for (two variables): 0 and -2147483648 meet after 0 steps, at 0 and -2147483648"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["loops", "7", "x"],
+    "expected": {
+      "stdout": [
+        "n = 7",
+        "  for: 1 + ... + 7 = 28",
+        "  while: collatz(7) reaches 1 in 16 steps",
+        "  do-while: 7 reversed is 7",
+        "  foreach: odd squares below 7: 1",
+        "  goto: 7 is prime",
+        "  for (two variables): 0 and 7 meet after 4 steps, at 4 and 3"
+      ],
+      "stderr": ["\"x\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": [
+      "switch",
+      "0",
+      "1",
+      "2",
+      "3",
+      "5",
+      "6",
+      "7",
+      "11",
+      "12",
+      "13",
+      "21",
+      "22",
+      "23",
+      "100",
+      "111",
+      "112"
+    ],
+    "expected": {
+      "stdout": [
+        "0: 0th; day 0 is a Sunday, at the weekend; zero; light after 0 changes is Red",
+        "1: 1st; day 1 is a Monday; a power of ten; light after 1 changes is RedAmber",
+        "2: 2nd; day 2 is a Tuesday; even; light after 2 changes is Green",
+        "3: 3rd; day 3 is a Wednesday; odd; light after 3 changes is Amber",
+        "5: 5th; day 5 is a Friday, nearly the weekend; odd; light after 5 changes is RedAmber",
+        "6: 6th; day 6 is a Saturday, at the weekend; even; light after 6 changes is Green",
+        "7: 7th; day 7 is a Sunday, at the weekend; odd and lucky; light after 7 changes is Amber",
+        "11: 11th; day 11 is a Thursday; odd; light after 11 changes is Amber",
+        "12: 12th; day 12 is a Friday, nearly the weekend; even; light after 12 changes is Red",
+        "13: 13th; day 13 is a Saturday, at the weekend; odd and lucky; light after 13 changes is RedAmber",
+        "21: 21st; day 21 is a Sunday, at the weekend; odd; light after 21 changes is RedAmber",
+        "22: 22nd; day 22 is a Monday; even; light after 22 changes is Green",
+        "23: 23rd; day 23 is a Tuesday; odd; light after 23 changes is Amber",
+        "100: 100th; day 100 is a Tuesday; a power of ten; light after 100 changes is Red",
+        "111: 111th; day 111 is a Saturday, at the weekend; odd; light after 111 changes is Amber",
+        "112: 112th; day 112 is a Sunday, at the weekend; even; light after 112 changes is Red"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "switch",
+      "-1",
+      "-10",
+      "-13",
+      "2147483647",
+      "-2147483648",
+      "red",
+      "Grey",
+      "BLUE",
+      "teal"
+    ],
+    "expected": {
+      "stdout": [
+        "-1: -1st; day -1 is a Saturday, at the weekend; minus a power of ten; light after -1 changes is Red",
+        "-10: -10th; day -10 is a Thursday; minus a power of ten; light after -10 changes is Red",
+        "-13: -13th; day -13 is a Monday; odd; light after -13 changes is Red",
+        "2147483647: 2147483647th; day 2147483647 is a Monday; the largest int; light after 2147483647 changes is Amber",
+        "-2147483648: -2147483648th; day -2147483648 is a Friday, nearly the weekend; the smallest int; light after -2147483648 changes is Red",
+        "\"red\": #FF0000",
+        "\"Grey\": #808080",
+        "\"BLUE\": #0000FF",
+        "\"teal\": not a colour"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "exceptions",
+      "none",
+      "divide:4",
+      "divide:0",
+      "parse:12",
+      "parse:",
+      "parse:abc",
+      "parse:99999999999",
+      "parse:-99999999999"
+    ],
+    "expected": {
+      "stdout": [
+        "none:",
+        "  try",
+        "  finally",
+        "divide:4:",
+        "  100 / 4 = 25",
+        "  finally",
+        "divide:0:",
+        "  caught DivideByZeroException",
+        "  finally",
+        "parse:12:",
+        "  parsed 12",
+        "parse::",
+        "  caught FormatException: blank",
+        "parse:abc:",
+        "  caught FormatException: not a number",
+        "parse:99999999999:",
+        "  caught OverflowException: too big",
+        "parse:-99999999999:",
+        "  caught OverflowException: too small"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "exceptions",
+      "validate:50",
+      "validate:-5",
+      "validate:500",
+      "overflow:10",
+      "overflow:11",
+      "rethrow",
+      "wrap",
+      "filter",
+      "using",
+      "return"
+    ],
+    "expected": {
+      "stdout": [
+        "validate:50:",
+        "  50 is valid",
+        "validate:-5:",
+        "  -5 is negative: must not be negative",
+        "validate:500:",
+        "  500 is too big: must be at most 100",
+        "overflow:10:",
+        "  int.MaxValue - 10 + 10 = 2147483647",
+        "overflow:11:",
+        "  int.MaxValue - 10 + 11 overflows",
+        "rethrow:",
+        "  inner catch: inner",
+        "  inner finally",
+        "  outer catch: inner",
+        "  outer finally",
+        "wrap:",
+        "  wrapped <- ValidationException: the answer",
+        "filter:",
+        "  filter sees filtered",
+        "  inner finally",
+        "  caught",
+        "using:",
+        "  open first",
+        "  open second",
+        "  using both",
+        "  dispose second",
+        "  dispose first",
+        "  caught: thrown while using",
+        "return:",
+        "  finally sets value = 2",
+        "  returned 1"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["exceptions", "none", "escape", "none"],
+    "expected": {
+      "stdout": ["none:", "  try", "  finally", "escape:", "  finally"],
+      "stderr": ["Unhandled NotSupportedException: nobody catches this"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["exceptions", "divide"],
+    "expected": {
+      "stdout": ["divide:"],
+      "stderr": ["Case \"divide\" needs an operand."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["exceptions", "divide:x"],
+    "expected": {
+      "stdout": ["divide:x:"],
+      "stderr": ["\"x\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["exceptions", "explode"],
+    "expected": {
+      "stdout": ["explode:"],
+      "stderr": ["Unknown case \"explode\"."],
+      "exitCode": 1
+    }
+  }
+]

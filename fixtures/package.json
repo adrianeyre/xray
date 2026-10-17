@@ -1,0 +1,20 @@
+{
+  "name": "@xray/fixtures",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Xray Fixtures — the C# projects Round-trip tests start from — and the test-side tooling that builds and runs them.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

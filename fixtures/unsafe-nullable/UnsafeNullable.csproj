@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app whose project properties a Reconstruction must recover
+    (PRD FR-9): unsafe code, a nullable context, an assembly name and root
+    namespace that differ from the project's name, and assembly attributes set
+    through the project rather than in source.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Xray.UnsafeNullable</AssemblyName>
+    <RootNamespace>Fixtures.Pointers</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+
+    <AssemblyVersion>2.3.4.5</AssemblyVersion>
+    <FileVersion>2.3.4.6</FileVersion>
+    <InformationalVersion>2.3.4-beta.7</InformationalVersion>
+    <!-- No "+<commit>" suffix, so the version is the same in any checkout. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <AssemblyTitle>Unsafe and nullable</AssemblyTitle>
+    <Company>Xray Fixtures</Company>
+    <Product>Xray</Product>
+    <Description>Pointers, fixed buffers and nullable annotations.</Description>
+    <Copyright>Copyright (c) Xray Fixtures</Copyright>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="Fixture" Value="unsafe-nullable" />
+    <InternalsVisibleTo Include="Xray.UnsafeNullable.Tests" />
+  </ItemGroup>
+
+</Project>

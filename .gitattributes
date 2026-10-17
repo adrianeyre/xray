@@ -1,0 +1,12 @@
+# Check out LF everywhere. Windows runners default to core.autocrlf=true, which
+# would turn every file CRLF and fail `prettier --check` (endOfLine: lf).
+* text=auto eol=lf
+
+# Prebuilt Fixtures (fixtures/native) are committed byte for byte.
+*.exe binary
+*.dll binary
+# A Fixture's strong-name key (fixtures/copied-binary) is binary too.
+*.snk binary
+# A Fixture's images (fixtures/resources), and the engine's tests' bytes, are binary too.
+*.png binary
+*.bin binary

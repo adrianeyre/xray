@@ -1,0 +1,276 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: AsyncAwait <sum|interleave|totals|exceptions|fail|cancel|context|stream|dispose> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: AsyncAwait <sum|interleave|totals|exceptions|fail|cancel|context|stream|dispose> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["sum", "1", "2", "3", "4"],
+    "expected": {
+      "stdout": [
+        "square of 1 already complete: False",
+        "square of 2 already complete: True",
+        "square of 3 already complete: False",
+        "square of 4 already complete: True",
+        "the sum of their squares is 30",
+        "echoed: 30, 1!"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["interleave", "3", "2"],
+    "expected": {
+      "stdout": [
+        "A step 1",
+        "B step 1",
+        "both started",
+        "A step 2",
+        "B step 2",
+        "A step 3",
+        "B done",
+        "A done",
+        "results: Ax3, Bx2"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["totals", "5", "10", "20"],
+    "expected": {
+      "stdout": [
+        "3 started; the total is still 0",
+        "+5 = 5",
+        "+10 = 15",
+        "+20 = 35",
+        "the total is 35"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["exceptions", "boom"],
+    "expected": {
+      "stdout": [
+        "neither call threw; faulted already: True, False",
+        "caught \"boom late\"",
+        "awaited in catch, back on the context: True",
+        "awaited in finally",
+        "awaiting both threw the first: \"boom early\"; the task holds 2 exceptions"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["fail", "oops"],
+    "expected": {
+      "stdout": ["failing"],
+      "stderr": ["InvalidOperationException: oops"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["cancel", "5", "3"],
+    "expected": {
+      "stdout": [
+        "counted 1",
+        "counted 2",
+        "OperationCanceledException; the count is Canceled, for the source's token: True",
+        "an endless delay ended in TaskCanceledException, Canceled"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["cancel", "2", "9"],
+    "expected": {
+      "stdout": [
+        "counted 1",
+        "counted 2",
+        "counted to 2",
+        "an endless delay ended in TaskCanceledException, Canceled"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["context"],
+    "expected": {
+      "stdout": [
+        "before any await: on the context",
+        "after an await: on the context",
+        "after ConfigureAwait(true): on the context",
+        "after ConfigureAwait(false) on a completed task: on the context",
+        "inside a method that used ConfigureAwait(false): off the context, with none, on another thread",
+        "back in its caller: on the context",
+        "inside a method that awaited the thread pool: off the context, with none, on another thread",
+        "back in its caller: on the context",
+        "after ConfigureAwait(true) on a ValueTask of 9: on the context"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["stream", "1", "2", "3", "4", "5", "6"],
+    "expected": {
+      "stdout": [
+        "evens started",
+        "yielding 2",
+        "yielding 4",
+        "yielding 6",
+        "evens finally",
+        "all evens: [2, 4, 6]",
+        "evens started",
+        "yielding 2",
+        "took 2, then broke off",
+        "evens finally",
+        "evens started",
+        "yielding 2",
+        "mapped to <1>",
+        "yielding 4",
+        "mapped to <2>",
+        "yielding 6",
+        "mapped to <3>",
+        "evens finally",
+        "evens started",
+        "yielding 2",
+        "took 2, then cancelled",
+        "evens finally",
+        "OperationCanceledException from the stream",
+        "tick 1: on the context",
+        "tick 2: on the context",
+        "tick 1 with ConfigureAwait(false): off the context, with none, on another thread",
+        "tick 2 with ConfigureAwait(false): off the context, with none, on another thread",
+        "and then: on the context"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["dispose", "a", "stop", "b"],
+    "expected": {
+      "stdout": [
+        "used first",
+        "disposed first",
+        "used a",
+        "disposed a",
+        "used stop",
+        "stopping early",
+        "disposed stop",
+        "evens started",
+        "yielding 2",
+        "moved to 2",
+        "yielding 4",
+        "moved to 4",
+        "evens finally"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least 1 int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["sum", "1", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"x\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["exceptions", "a", "b"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give one word."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["fail"],
+    "expected": {
+      "stdout": ["failing"],
+      "stderr": ["Give one word."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["cancel", "5"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least 2 ints."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["stream"],
+    "expected": {
+      "stdout": [
+        "evens started",
+        "evens finally",
+        "all evens: []",
+        "evens started",
+        "evens finally",
+        "evens started",
+        "evens finally",
+        "evens started",
+        "evens finally",
+        "never cancelled",
+        "tick 1: on the context",
+        "tick 2: on the context",
+        "tick 1 with ConfigureAwait(false): off the context, with none, on another thread",
+        "tick 2 with ConfigureAwait(false): off the context, with none, on another thread",
+        "and then: on the context"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["dispose"],
+    "expected": {
+      "stdout": [
+        "used first",
+        "disposed first",
+        "evens started",
+        "yielding 2",
+        "moved to 2",
+        "yielding 4",
+        "moved to 4",
+        "evens finally"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  }
+]

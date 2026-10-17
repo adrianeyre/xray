@@ -1,0 +1,93 @@
+[
+  {
+    "args": ["framework"],
+    "expected": {
+      "stdout": [".NETFramework,Version=v4.8"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["add", "0.1", "0.2"],
+    "expected": {
+      "stdout": ["0.1 + 0.2 = 0.3", "exactly 0.30000000000000004"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["add", "1.5", "-0.25"],
+    "expected": {
+      "stdout": ["1.5 + -0.25 = 1.25", "exactly 1.25"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["add", "1.5", "half"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Operands must be numbers."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["add", "1.5"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Net48Console add <left> <right>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["sum", "1", "2", "3"],
+    "expected": {
+      "stdout": ["sum of 3 = 6"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum"],
+    "expected": {
+      "stdout": ["sum of 0 = 0"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "2147483647", "1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["The sum overflowed."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["words", "pear", "Apple", "fig"],
+    "expected": {
+      "stdout": ["3 words: APPLE FIG PEAR"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Net48Console <framework|add|sum|words> [operands...]"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["divide", "4", "2"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"divide\".",
+        "Usage: Net48Console <framework|add|sum|words> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  }
+]

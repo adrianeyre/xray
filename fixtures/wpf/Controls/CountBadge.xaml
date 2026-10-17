@@ -1,0 +1,10 @@
+<UserControl x:Class="Tally.Controls.CountBadge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="root">
+    <Border Background="{DynamicResource AccentBrush}" CornerRadius="{StaticResource BadgeCorner}" Padding="8">
+        <TextBlock x:Name="countText" x:FieldModifier="public"
+                   FontSize="{StaticResource BadgeFontSize}" Foreground="White" HorizontalAlignment="Center"
+                   Text="{Binding Count, ElementName=root}" />
+    </Border>
+</UserControl>

@@ -1,0 +1,191 @@
+[
+  {
+    "args": ["compare", "1.0.0", "1.0.0-beta.2"],
+    "expected": {
+      "stdout": [
+        "1.0.0 > 1.0.0-beta.2",
+        "1.0.0: stable",
+        "1.0.0-beta.2: prerelease (beta.2)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "2.1", "2.1.0.0"],
+    "expected": {
+      "stdout": ["2.1.0 == 2.1.0", "2.1.0: stable", "2.1.0: stable"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1.2.3.4", "1.2.3"],
+    "expected": {
+      "stdout": [
+        "1.2.3.4 > 1.2.3",
+        "1.2.3.4: stable, four-part",
+        "1.2.3: stable"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1.2.3+abc", "1.2.4"],
+    "expected": {
+      "stdout": [
+        "1.2.3 < 1.2.4",
+        "1.2.3+abc: stable, built abc",
+        "1.2.4: stable"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1.0", "nope"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Not a version: nope"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": [
+      "sort",
+      "1.0.0",
+      "2.0.0-rc.1",
+      "1.10.0",
+      "1.2.0",
+      "1.0",
+      "2.0.0",
+      "3.0.0-alpha"
+    ],
+    "expected": {
+      "stdout": [
+        "6 of 7: 1.0.0, 1.2.0, 1.10.0, 2.0.0-rc.1, 2.0.0, 3.0.0-alpha",
+        "1.x: 3, latest 1.10.0",
+        "2.x: 2, latest 2.0.0",
+        "3.x: 1, latest 3.0.0-alpha",
+        "Highest stable: 2.0.0"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sort", "1.0.0-a", "1.0.0-b"],
+    "expected": {
+      "stdout": [
+        "2 of 2: 1.0.0-a, 1.0.0-b",
+        "1.x: 2, latest 1.0.0-b",
+        "No stable version."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sort", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Not a version: x"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["best", "[1.2,2.0)", "1.0.0", "1.5.0", "1.2.1", "2.0.0"],
+    "expected": {
+      "stdout": ["(>= 1.2.0 && < 2.0.0): [1.2.0, 2.0.0)", "Best: 1.2.1"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["best", "(,1.0]", "2.0.0"],
+    "expected": {
+      "stdout": ["(<= 1.0.0): (, 1.0.0]", "No version satisfies it."],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["best", "1.0.0-0", "1.0.0-beta", "1.0.0"],
+    "expected": {
+      "stdout": ["(>= 1.0.0-0): [1.0.0-0, )", "Best: 1.0.0"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["best", "1.0.0-0", "1.0.0-beta", "1.0.0", "--prerelease"],
+    "expected": {
+      "stdout": ["(>= 1.0.0-0): [1.0.0-0, )", "Best: 1.0.0-beta"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["best", "-p", "1.0.0-0", "1.0.0-beta"],
+    "expected": {
+      "stdout": ["(>= 1.0.0-0): [1.0.0-0, )", "Best: 1.0.0-beta"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["best", "[1.0", "1.0.0"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Not a version range: [1.0"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [
+        "Description:",
+        "  Compares, sorts and matches NuGet versions.",
+        "",
+        "Usage:",
+        "  MicrosoftPackages [command] [options]",
+        "",
+        "Options:",
+        "  -?, -h, --help  Show help and usage information",
+        "  --version       Show version information",
+        "",
+        "Commands:",
+        "  compare <first> <second>  Compare two versions.",
+        "  sort <versions>           Sort versions, once each, and group them by major version.",
+        "  best <range> <versions>   Find the lowest version a range allows.",
+        ""
+      ],
+      "stderr": ["Required command was not provided.", ""],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["compare", "1.0"],
+    "expected": {
+      "stdout": [
+        "Description:",
+        "  Compare two versions.",
+        "",
+        "Usage:",
+        "  MicrosoftPackages compare <first> <second> [options]",
+        "",
+        "Arguments:",
+        "  <first>   A version.",
+        "  <second>  Another version.",
+        "",
+        "Options:",
+        "  -?, -h, --help  Show help and usage information",
+        ""
+      ],
+      "stderr": ["Required argument missing for command: 'compare'.", ""],
+      "exitCode": 1
+    }
+  }
+]

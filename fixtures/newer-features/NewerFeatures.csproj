@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The newer language features beside records and patterns on the ladder
+    (PRD §10): a .NET 8 console app, in C# 12, whose behaviour turns on primary
+    constructors, collection expressions and file-scoped types. The compiler
+    keeps a captured parameter in a field, builds a collection through an
+    array, a span, a builder method or a type of its own, and gives a file-scoped
+    type a name no source can write; a Reconstruction must turn each back into C#.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
+  </PropertyGroup>
+
+</Project>

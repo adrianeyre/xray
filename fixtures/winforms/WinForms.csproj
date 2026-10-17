@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 Windows Forms app (PRD FR-12, FR-14), laid out as Visual Studio's
+    template and designer lay one out: MainForm.cs beside MainForm.Designer.cs,
+    whose InitializeComponent builds the form, its controls, a ToolTip in its
+    components container and the event handlers they call; and MainForm.resx,
+    holding the form's icon and the image of a PictureBox, which the designer
+    stores as a System.Drawing.Icon and a System.Drawing.Bitmap, read back by a
+    ComponentResourceManager as the form is built. Program.Main calls
+    ApplicationConfiguration.Initialize(), which the Windows Forms source
+    generator writes as the project is built. Its target framework is
+    net8.0-windows, whose Assembly records Windows 7.0 as its platform; it
+    builds on every OS (EnableWindowsTargeting) and runs only on Windows.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Greeter</AssemblyName>
+    <RootNamespace>Greeter</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+</Project>

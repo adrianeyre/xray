@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Negative: obfuscation (FR-3). An ordinary .NET 8 console program that
+    Obfuscar, run on it as it is built, renames (types, members and parameters
+    to A, a, B…) and whose strings it hides (each literal replaced by a call
+    that decodes it from an array of bytes). A Reconstruction flags it as
+    obfuscated, and carries on without undoing any of it.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- An obfuscated Assembly ships without the PDB that would name what Obfuscar renamed. -->
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Obfuscar's .NET tool, downloaded by restore but not referenced: it runs on every OS. -->
+    <PackageDownload Include="Obfuscar.GlobalTool" Version="[2.2.50]" />
+  </ItemGroup>
+
+  <!--
+    Obfuscates the Assembly the compiler wrote, into obj/, and puts that in its
+    place in the build output, every build, so the build output is never the
+    Assembly as compiled. Obfuscar's map of what it renamed stays in obj/.
+  -->
+  <Target Name="Obfuscate" AfterTargets="CopyFilesToOutputDirectory">
+    <PropertyGroup>
+      <ObfuscarTool>$(NuGetPackageRoot)obfuscar.globaltool/2.2.50/tools/net8.0/any/GlobalTools.dll</ObfuscarTool>
+      <ObfuscarDirectory>$(IntermediateOutputPath)obfuscar/</ObfuscarDirectory>
+      <ObfuscarIn>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)'))</ObfuscarIn>
+      <ObfuscarOut>$([System.IO.Path]::GetFullPath('$(ObfuscarDirectory)'))</ObfuscarOut>
+    </PropertyGroup>
+    <ItemGroup>
+      <ObfuscarConfiguration Include="&lt;Obfuscator&gt;" />
+      <ObfuscarConfiguration Include="  &lt;Var name=&quot;InPath&quot; value=&quot;$(ObfuscarIn)&quot; /&gt;" />
+      <ObfuscarConfiguration Include="  &lt;Var name=&quot;OutPath&quot; value=&quot;$(ObfuscarOut)&quot; /&gt;" />
+      <!-- Obfuscar's defaults, spelled out: rename everything, public or not, and hide every string. -->
+      <ObfuscarConfiguration Include="  &lt;Var name=&quot;KeepPublicApi&quot; value=&quot;false&quot; /&gt;" />
+      <ObfuscarConfiguration Include="  &lt;Var name=&quot;HidePrivateApi&quot; value=&quot;true&quot; /&gt;" />
+      <ObfuscarConfiguration Include="  &lt;Var name=&quot;HideStrings&quot; value=&quot;true&quot; /&gt;" />
+      <ObfuscarConfiguration Include="  &lt;Module file=&quot;$(ObfuscarIn)$(TargetFileName)&quot; /&gt;" />
+      <ObfuscarConfiguration Include="&lt;/Obfuscator&gt;" />
+    </ItemGroup>
+    <RemoveDir Directories="$(ObfuscarDirectory)" />
+    <MakeDir Directories="$(ObfuscarDirectory)" />
+    <WriteLinesToFile File="$(ObfuscarDirectory)obfuscar.xml" Lines="@(ObfuscarConfiguration)" />
+    <!-- The tool targets .NET 8; on a machine with only a later runtime, it runs on that. -->
+    <Exec
+      Command="&quot;$(DOTNET_HOST_PATH)&quot; &quot;$(ObfuscarTool)&quot; &quot;$(ObfuscarOut)obfuscar.xml&quot;"
+      EnvironmentVariables="DOTNET_ROLL_FORWARD=Major;DOTNET_CLI_TELEMETRY_OPTOUT=1"
+      StandardOutputImportance="low" />
+    <Copy SourceFiles="$(ObfuscarDirectory)$(TargetFileName)" DestinationFiles="$(TargetPath)" />
+  </Target>
+
+</Project>

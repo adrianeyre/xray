@@ -1,0 +1,204 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Lexicon <identifiers|numbers|dates|greetings|cultures|vowels|words|tokens|regexes> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["Bad"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Lexicon <identifiers|numbers|dates|greetings|cultures|vowels|words|tokens|regexes> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: Lexicon <identifiers|numbers|dates|greetings|cultures|vowels|words|tokens|regexes> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["identifiers", "foo", "1bar", "_x9", "a-b"],
+    "expected": {
+      "stdout": [
+        "foo: an identifier",
+        "1bar: not an identifier",
+        "_x9: an identifier",
+        "a-b: not an identifier"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "3", "apples,", "-12", "pears", "and", "40"],
+    "expected": {
+      "stdout": [
+        "3 numbers: [3, -12, 40], summing to 31",
+        "last digit: 0 at 25"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "none"],
+    "expected": {
+      "stdout": ["0 numbers: [], summing to 0", "no digit"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "dates",
+      "from",
+      "2024-02-29",
+      "to",
+      "2025-12-31,",
+      "not",
+      "20240-01-01"
+    ],
+    "expected": {
+      "stdout": [
+        "from 29/02/2024 to 31/12/2025, not 20240-01-01",
+        "year 2024, month 02, day 29 at 5",
+        "year 2025, month 12, day 31 at 19"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["dates", "no", "dates"],
+    "expected": {
+      "stdout": ["no dates"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["greetings", "HELLO", "Helllo", "hero", "shello"],
+    "expected": {
+      "stdout": [
+        "HELLO: greets with \"HELLO\" at 0",
+        "Helllo: greets with \"Helllo\" at 0",
+        "hero: no greeting",
+        "shello: greets with \"hello\" at 1"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["cultures"],
+    "expected": {
+      "stdout": [
+        "U+0049: Turkish False, invariant True",
+        "U+0130: Turkish True, invariant False",
+        "U+0069: Turkish True, invariant True",
+        "U+0131: Turkish False, invariant False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["vowels", "Banana", "sky", "AEIOU"],
+    "expected": {
+      "stdout": ["Banana -> B*n*n*", "sky -> sky", "AEIOU -> *****"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["words", "Hello,", "world;", "how", "are", "you?"],
+    "expected": {
+      "stdout": ["5 words in 5 operands: [Hello|world|how|are|you]"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["words"],
+    "expected": {
+      "stdout": ["0 words in 0 operands: []"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["tokens", "42", "word", "x7", "!"],
+    "expected": {
+      "stdout": [
+        "Token { Text = 42, Kind = number }: number",
+        "Token { Text = word, Kind = word }: word",
+        "Token { Text = x7, Kind = symbol }: symbol",
+        "Token { Text = !, Kind = symbol }: symbol"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["regexes"],
+    "expected": {
+      "stdout": [
+        "Program.Command: \"^[a-z]+$\", None, culture \"\", timeout none",
+        "  not public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Command, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Program.GeneratedName: \"^<(?<file>[^>]+)>F[0-9A-F]{64}__(?<name>.+)_[0-9]+$\", None, culture \"\", timeout none",
+        "  not public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns GeneratedName, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.Greeting: \"hel+o\", IgnoreCase, NonBacktracking, culture \"\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns a Regex constructed at runtime, the same each time: True",
+        "Patterns.Identifier: \"^[A-Za-z_][A-Za-z_0-9]*$\", None, culture \"\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Identifier, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.InvariantI: \"^i$\", IgnoreCase, CultureInvariant, culture \"\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns InvariantI, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.IsoDate: \"\\b(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})\\b\", None, culture \"\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns IsoDate, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.LastDigit: \"\\d\", RightToLeft, culture \"\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns LastDigit, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.Number: \"-?\\d+\", CultureInvariant, culture \"en-US\", timeout 1000 ms",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Number, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Patterns.TurkishI: \"^i$\", IgnoreCase, culture \"tr-TR\", timeout none",
+        "  public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns TurkishI, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Masker.Vowels: \"[aeiou]\", IgnoreCase, culture \"\", timeout none",
+        "  not public, instance, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Vowels, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Document<T>.Splitter.Separator: \"[\\s,;.!?]+\", None, culture \"\", timeout none",
+        "  not public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Separator, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Token.Number: \"^[0-9]+$\", None, culture \"\", timeout none",
+        "  not public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Number, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True",
+        "Token.Word: \"^\\p{L}+$\", None, culture \"\", timeout none",
+        "  not public, static, implemented by System.Text.RegularExpressions.Generator",
+        "  returns Word, scoped to RegexGenerator_g, in System.Text.RegularExpressions.Generated, a Regex, the same each time: True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  }
+]

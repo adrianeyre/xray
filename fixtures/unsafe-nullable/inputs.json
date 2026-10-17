@@ -1,0 +1,254 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Xray.UnsafeNullable <assembly|nullability|sum|reverse|checksum|apply|find> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: Xray.UnsafeNullable <assembly|nullability|sum|reverse|checksum|apply|find> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["assembly"],
+    "expected": {
+      "stdout": [
+        "Xray.UnsafeNullable, Version=2.3.4.5, Culture=neutral, PublicKeyToken=null",
+        "[assembly: System.Reflection.AssemblyCompanyAttribute(\"Xray Fixtures\")]",
+        "[assembly: System.Reflection.AssemblyConfigurationAttribute(\"Release\")]",
+        "[assembly: System.Reflection.AssemblyCopyrightAttribute(\"Copyright (c) Xray Fixtures\")]",
+        "[assembly: System.Reflection.AssemblyDescriptionAttribute(\"Pointers, fixed buffers and nullable annotations.\")]",
+        "[assembly: System.Reflection.AssemblyFileVersionAttribute(\"2.3.4.6\")]",
+        "[assembly: System.Reflection.AssemblyInformationalVersionAttribute(\"2.3.4-beta.7\")]",
+        "[assembly: System.Reflection.AssemblyMetadataAttribute(\"Fixture\", \"unsafe-nullable\")]",
+        "[assembly: System.Reflection.AssemblyProductAttribute(\"Xray\")]",
+        "[assembly: System.Reflection.AssemblyTitleAttribute(\"Unsafe and nullable\")]",
+        "[assembly: System.Resources.NeutralResourcesLanguageAttribute(\"en-GB\")]",
+        "[assembly: System.Runtime.CompilerServices.CompilationRelaxationsAttribute((Int32)8)]",
+        "[assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute(\"Xray.UnsafeNullable.Tests\")]",
+        "[assembly: System.Runtime.CompilerServices.RuntimeCompatibilityAttribute(WrapNonExceptionThrows = True)]",
+        "[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(\".NETCoreApp,Version=v8.0\", FrameworkDisplayName = \".NET 8.0\")]",
+        "[module: System.Runtime.CompilerServices.RefSafetyRulesAttribute((Int32)11)]",
+        "[module: System.Security.UnverifiableCodeAttribute()]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["nullability"],
+    "expected": {
+      "stdout": [
+        "property LastFound: Nullable",
+        "property Name: NotNull",
+        "method Find(key: NotNull) returns Nullable",
+        "method FirstOr(values: NotNull<NotNull>, fallback: NotNull) returns NotNull",
+        "method FullNames() returns NotNull<Nullable>",
+        "method TryFind(key: NotNull, entry: Nullable) returns NotNull"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "1", "2", "3"],
+    "expected": { "stdout": ["sum = 6"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["sum", "-5", "3"],
+    "expected": { "stdout": ["sum = -2"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["sum"],
+    "expected": { "stdout": ["sum = 0"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["sum", "2147483647", "1"],
+    "expected": { "stdout": ["sum = 2147483648"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["sum", "1", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Operands must be integers."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["sum", "2147483648"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Operands must fit in an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["reverse", "hello"],
+    "expected": { "stdout": ["olleh"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["reverse", "a"],
+    "expected": { "stdout": ["a"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["reverse", ""],
+    "expected": { "stdout": [""], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["reverse", "ab", "cd"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Xray.UnsafeNullable reverse <word>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["checksum", "1", "2", "3", "300"],
+    "expected": {
+      "stdout": ["length 4, checksum 15410, sizeof(Block) = 20"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["checksum", "255", "1"],
+    "expected": {
+      "stdout": ["length 2, checksum 257, sizeof(Block) = 20"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["checksum"],
+    "expected": {
+      "stdout": ["length 0, checksum 0, sizeof(Block) = 20"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "checksum",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17"
+    ],
+    "expected": {
+      "stdout": [],
+      "stderr": ["At most 16 operands fit in a block."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["apply", "add", "1", "2", "3"],
+    "expected": { "stdout": ["add = 6"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["apply", "multiply", "2", "3", "4"],
+    "expected": { "stdout": ["multiply = 24"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["apply", "multiply", "2147483647", "2147483647", "4"],
+    "expected": {
+      "stdout": ["multiply = -17179869180"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["apply", "max", "2", "9", "4"],
+    "expected": { "stdout": ["max = 9"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["apply", "max", "-3"],
+    "expected": { "stdout": ["max = -3"], "stderr": [], "exitCode": 0 }
+  },
+  {
+    "args": ["apply", "divide", "1", "2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Unknown operation \"divide\"."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["apply", "add"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is nothing to apply it to."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["apply"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Xray.UnsafeNullable apply <add|multiply|max> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["find", "ada", "grace", "bob"],
+    "expected": {
+      "stdout": [
+        "ada: Ada Lovelace",
+        "grace: (no full name)",
+        "bob: not found",
+        "last found: grace"
+      ],
+      "stderr": [],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["find", "alan"],
+    "expected": {
+      "stdout": ["alan: Alan Turing", "last found: alan"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["find", "bob"],
+    "expected": {
+      "stdout": ["bob: not found", "last found: (none)"],
+      "stderr": [],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["find"],
+    "expected": {
+      "stdout": ["last found: (none)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  }
+]

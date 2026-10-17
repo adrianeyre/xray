@@ -1,0 +1,21 @@
+{
+  "name": "@xray/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Xray core \u2014 Reconstruction pipeline, Dependency Resolution, solution generation, build verification and report.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@xray/fixtures": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

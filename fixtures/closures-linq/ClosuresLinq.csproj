@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The closures/LINQ rung of the ladder (PRD §10): a .NET 8 console app whose
+    behaviour turns on lambdas and the variables they capture, LINQ in query
+    and method syntax, and iterators, all of which the compiler lowers to
+    classes of its own that a Reconstruction must turn back into C#.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

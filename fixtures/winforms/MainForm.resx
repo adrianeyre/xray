@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="logo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAQCAIAAADfzGvmAAAAR0lEQVR42mOQqzgBR79OaMDRQIkzDCrX
+        ALkMg8o1UAcNHteAHDSoXIPioEGSuhkGlWugDhpUOZ9htBwaLYdGy6HRcmiAYxAA86LsPed+SUEAAAAA
+        SUVORK5CYII=
+</value>
+  </data>
+  <metadata name="hints.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAooAD/AAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/wAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8AAAAAAAAAAAAAAAAAAAAAKKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/wAAAAAAAAAAAAAAACigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8AAAAAAAAAAAAAAAAooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/AAAAAAAAAAAooAD/KKAA/yigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8AAAAAAAAAACigAP8ooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8AAAAAAAAAAAAAAAAooAD/KKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/AAAAAAAAAAAAAAAAKKAA/yig
+        AP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/wAAAAAAAAAAAAAAAAAA
+        AAAooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/wAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAACigAP8ooAD/KKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/wAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAKKAA/yigAP8ooAD/KKAA/yigAP8ooAD/KKAA/wAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACigAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAA==
+</value>
+  </data>
+</root>

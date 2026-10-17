@@ -1,0 +1,60 @@
+{
+  "name": "@adrianeyre/xray",
+  "version": "1.0.0",
+  "description": "Turns compiled .NET applications back into buildable, runnable C# solutions.",
+  "keywords": [
+    "dotnet",
+    "csharp",
+    "decompiler",
+    "ilspy",
+    "reconstruction"
+  ],
+  "homepage": "https://github.com/adrianeyre/xray#readme",
+  "bugs": "https://github.com/adrianeyre/xray/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianeyre/xray.git",
+    "directory": "packages/xray"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "xray": "./bin/xray.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "engine",
+    "web",
+    "THIRD-PARTY-NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsx build.ts",
+    "prepack": "tsx build.ts",
+    "bundle": "tsx bundle.ts",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.6",
+    "fastify": "^5.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@xray/cli": "workspace:*",
+    "@xray/fixtures": "workspace:*",
+    "@xray/site": "workspace:*",
+    "@xray/web": "workspace:*",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:",
+    "vite": "^8.3.4",
+    "vitest": "catalog:"
+  }
+}

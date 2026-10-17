@@ -1,0 +1,191 @@
+# Install, lint, typecheck and test on every OS Xray supports (PRD §8, §9).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+jobs:
+  check:
+    name: ${{ matrix.os }}
+    strategy:
+      # Let every OS report, so a platform-specific failure is not hidden by
+      # another OS cancelling it.
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      # Versions come from package.json: pnpm from `packageManager`, Node from
+      # `devEngines.runtime`. pnpm goes first so setup-node can cache its store.
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      # The engine sidecar, `dotnet build` verification and the Fixtures need
+      # the .NET SDK; 8 is the floor Xray supports.
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      # setup-dotnet's own cache requires a packages.lock.json, so cache the
+      # NuGet global-packages folder directly.
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '**/packages.lock.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+      # The engine sidecar (ADR 0001). Built on its own so a compile error shows
+      # as one, then its .NET unit tests. `pnpm test` drives the built engine.
+      - run: pnpm build:engine
+      - run: dotnet test engine
+
+      # The web app `xray ui` serves (ADR 0003), built with Vite on its own so
+      # a compile error shows as one.
+      - run: pnpm build:web
+
+      # The project site the Pages workflow publishes, built as it builds it.
+      - run: pnpm build:site
+
+      # Every Fixture, built as the tests build them (fixtures/README.md), so one
+      # that does not compile on this OS fails here rather than inside a test.
+      - run: pnpm build:fixtures
+      # Includes @adrianeyre/xray's tests, which pack it as it would be
+      # published, install the tarball with `pnpm add -g`, and run xray doctor,
+      # xray ui and a Round-trip with it, on this OS.
+      - run: pnpm test
+
+  # The engine on the newest .NET SDK, as well as on 8, the floor `check`
+  # builds with: it compiles with `LangVersion` latest, so a newer SDK's C#
+  # can bind the same code differently (C# 14's first-class spans made
+  # `array.Reverse()` the in-place, void MemoryExtensions.Reverse).
+  engine-sdk-10:
+    name: engine (.NET SDK 10)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        id: dotnet
+        with:
+          dotnet-version: 10.0.x
+      # Pin the SDK just installed, rather than any newer one on the runner.
+      - run: dotnet new globaljson --sdk-version "${{ steps.dotnet.outputs.dotnet-version }}" --output engine
+      - run: dotnet build engine/Xray.Engine --configuration Release
+      - run: dotnet test engine
+
+  # The benchmark of PRD §8 (docs/reference/benchmark.md): a Reconstruction of
+  # the benchmark Fixture, an Assembly of about 2,000 types and 5 MB, in under
+  # 60 s excluding `dotnet build`, reporting its progress at least once a
+  # second. Tracked on every run, in its summary and as an artifact, but never
+  # blocking: a shared runner is slower than a developer's laptop, and its
+  # speed varies from run to run.
+  benchmark:
+    name: benchmark
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '**/packages.lock.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:engine
+      # bash runs with pipefail, so a missed target still fails the step.
+      - run: pnpm --silent benchmark --json benchmark.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: benchmark
+          path: benchmark.json
+          if-no-files-found: ignore
+
+  # The smoke test against a real application (PRD §3, scenario 1;
+  # docs/reference/real-app.md): AwsWatchman's Assemblies as released,
+  # downloaded from nuget.org, reconstructed and built with NuGet lookups on,
+  # and checked against the outcome expected of them, reference by reference;
+  # then the original and the rebuilt app are run over the same inputs and
+  # must behave identically. On every OS, and blocking: a change to that
+  # outcome is a regression, or a gap closed, whose expectation is then
+  # updated.
+  real-app:
+    name: real app (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      # Restored, never saved: this job's Reconstruction restores packages of
+      # its own, which the cache `check` restores must not gain.
+      - uses: actions/cache/restore@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets', '**/packages.lock.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:engine
+      # bash runs with pipefail, so a result not as expected fails the step.
+      - run: pnpm --silent real-app --json real-app.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: real-app-${{ matrix.os }}
+          path: real-app.json
+          if-no-files-found: ignore

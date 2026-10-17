@@ -1,0 +1,16 @@
+<Window x:Class="Swatch.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Swatch">
+    <Window.Resources>
+        <sys:Double x:Key="Size">24</sys:Double>
+        <Style x:Key="Chip" TargetType="Button">
+            <EventSetter Event="MouseDoubleClick" Handler="Chip_MouseDoubleClick" />
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <TextBlock x:Name="label" FontSize="{StaticResource Size}" Foreground="{StaticResource Ink}" Text="Navy" />
+        <Button x:Name="chip" Style="{StaticResource Chip}" Content="Pick" Click="Chip_Click" />
+    </StackPanel>
+</Window>

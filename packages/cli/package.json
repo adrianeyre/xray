@@ -1,0 +1,29 @@
+{
+  "name": "@xray/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Xray command-line interface — a thin adapter over @xray/core.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "bin": {
+    "xray": "./bin/xray.js"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@xray/core": "workspace:*",
+    "@xray/server": "workspace:*",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@xray/fixtures": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

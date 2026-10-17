@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The multi-assembly Fixture's stock: referenced by both the program and Pricing. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Pricing checks SKUs with SkuRules, which is internal to this library. -->
+    <InternalsVisibleTo Include="Pricing" />
+  </ItemGroup>
+
+</Project>

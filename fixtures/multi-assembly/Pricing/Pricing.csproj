@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The multi-assembly Fixture's prices: a library that references another
+    Sibling Assembly, Inventory, and reaches into its internals.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Shop.Pricing</RootNamespace>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Inventory/Inventory.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app using a third party's class library that no NuGet
+    package holds (PRD FR-10.4): Kestrelwood.Checksums, strong-named with its
+    vendor's key, not this app's, and copied beside it by the build. It is not
+    the application's own, so a Reconstruction copies its binary into the
+    Recovered Solution's Dependencies/ folder and references it with a
+    HintPath, rather than reconstructing it as a Sibling Assembly.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The library's source is its vendor's, not this project's. -->
+    <Compile Remove="Kestrelwood/**" />
+    <ProjectReference Include="Kestrelwood/Kestrelwood.Checksums.csproj" />
+  </ItemGroup>
+
+</Project>

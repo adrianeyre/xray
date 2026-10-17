@@ -1,0 +1,29 @@
+{
+  "name": "@xray/server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Xray local web server \u2014 a thin adapter over @xray/core, bound to 127.0.0.1.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@xray/fixtures": "workspace:*",
+    "happy-dom": "^21.0.1",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.6",
+    "@xray/core": "workspace:*",
+    "@xray/web": "workspace:*",
+    "fastify": "^5.12.7"
+  }
+}

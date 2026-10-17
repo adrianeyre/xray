@@ -1,0 +1,280 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: NewerFeatures <counter|intervals|tally|temperature|collections|ordered|files|members> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: NewerFeatures <counter|intervals|tally|temperature|collections|ordered|files|members> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["counter", "clicks", "5"],
+    "expected": {
+      "stdout": [
+        "CLICKS at 5: next 5, 6, then 7; peeking 8",
+        "another: CLICKS at 1"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["counter", "Hits"],
+    "expected": {
+      "stdout": [
+        "HITS at 1: next 1, 2, then 3; peeking 4",
+        "another: HITS at 1"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["counter"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: NewerFeatures counter <name> [start]"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["counter", "clicks", "many"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"many\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["intervals", "3", "7"],
+    "expected": {
+      "stdout": [
+        "from 3, 4 long: [3, 4, 5, 6]",
+        "labelled: 3 to 7: [3, 4, 5, 6]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["intervals", "4"],
+    "expected": {
+      "stdout": [
+        "from 0, 4 long: [0, 1, 2, 3]",
+        "labelled: 0 to 4: [0, 1, 2, 3]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["intervals", "5", "2"],
+    "expected": {
+      "stdout": ["from 5, -3 long: []", "labelled: 5 to 2: []"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["intervals", "1", "2", "3"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: NewerFeatures intervals [start] <end>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["tally", "1", "2", "3"],
+    "expected": {
+      "stdout": [
+        "from 100: 106; from new(): 6; from default: 0; the copy: 1106"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["tally"],
+    "expected": {
+      "stdout": [
+        "from 100: 100; from new(): 0; from default: 0; the copy: 1100"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["temperature", "20", "-273.15", "36.6"],
+    "expected": {
+      "stdout": ["20 C is 293.15 K", "-273.15 C is 0 K", "36.6 C is 309.75 K"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["temperature", "0", "-300"],
+    "expected": {
+      "stdout": ["0 C is 273.15 K"],
+      "stderr": ["-300 C is below absolute zero. (Parameter 'celsius')"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["temperature", "warm"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"warm\" is not a number."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["collections", "3", "4", "5"],
+    "expected": {
+      "stdout": [
+        "array: [3, 4, 7], an array of 3",
+        "none: an array of 0, the same each time: True",
+        "joined: [3, 4, 5, 0, 4, 3], a List of 6",
+        "sequence: [3, 4], a read-only collection of 2",
+        "adding to the sequence throws NotSupportedException",
+        "mutable: [3, 4], a List of 2",
+        "copied: [3, 4, 5], a read-only collection of 3",
+        "distinct: [and, even, odd], a HashSet`1 of 3",
+        "immutable: [3, 6], a read-only collection of 2",
+        "Bag(3, 4, 12), 1 made by its builder",
+        "sum on the stack: 12",
+        "magic: XRAY"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["collections", "2", "2"],
+    "expected": {
+      "stdout": [
+        "array: [2, 2, 4], an array of 3",
+        "none: an array of 0, the same each time: True",
+        "joined: [2, 2, 0, 2, 2], a List of 5",
+        "sequence: [2, 2], a read-only collection of 2",
+        "adding to the sequence throws NotSupportedException",
+        "mutable: [2, 2], a List of 2",
+        "copied: [2, 2], a read-only collection of 2",
+        "distinct: [and, even], a HashSet`1 of 2",
+        "immutable: [2, 4], a read-only collection of 2",
+        "Bag(2, 2, 4), 1 made by its builder",
+        "sum on the stack: 6",
+        "magic: XRAY"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["collections", "-7", "10", "1", "8"],
+    "expected": {
+      "stdout": [
+        "array: [-7, 10, 3], an array of 3",
+        "none: an array of 0, the same each time: True",
+        "joined: [-7, 10, 1, 8, 0, 10, -7], a List of 7",
+        "sequence: [-7, 10], a read-only collection of 2",
+        "adding to the sequence throws NotSupportedException",
+        "mutable: [-7, 10], a List of 2",
+        "copied: [-7, 10, 1, 8], a read-only collection of 4",
+        "distinct: [and, even, odd], a HashSet`1 of 3",
+        "immutable: [-7, -14], a read-only collection of 2",
+        "Bag(-7, 10, -70), 1 made by its builder",
+        "sum on the stack: 11",
+        "magic: XRAY"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["collections", "1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least two ints."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["ordered"],
+    "expected": {
+      "stdout": [
+        "element 1, spread started, element 2, element 3, spread ended, element 4",
+        "[1, 2, 3, 4]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["files", "ada", "bo"],
+    "expected": {
+      "stdout": [
+        "<hello, ADA!> [goodbye, ada]",
+        "<hello, BO!> [goodbye, bo]",
+        "Greetings' Format: Format, scoped to its file, Greetings.cs",
+        "Greetings' Shouter: Shouter, scoped to its file, Greetings.cs, an IShout: True",
+        "Farewells' Format: Format, scoped to its file, Farewells.cs",
+        "the two Formats are the same type: False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["files"],
+    "expected": {
+      "stdout": [
+        "Greetings' Format: Format, scoped to its file, Greetings.cs",
+        "Greetings' Shouter: Shouter, scoped to its file, Greetings.cs, an IShout: True",
+        "Farewells' Format: Format, scoped to its file, Farewells.cs",
+        "the two Formats are the same type: False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["members"],
+    "expected": {
+      "stdout": [
+        "Counter",
+        "  fields: Int32 <start>P, readonly String <Name>k__BackingField",
+        "  constructors: (String name, Int32 start = 1)",
+        "Interval",
+        "  fields: Int32 <end>P, Int32 <start>P",
+        "  constructors: (Int32 end), (Int32 start, Int32 end)",
+        "Labelled",
+        "  fields: String <label>P",
+        "  constructors: (String label, Int32 start, Int32 end)",
+        "Tally",
+        "  fields: Int32 <count>P",
+        "  constructors: (Int32 count)",
+        "Temperature",
+        "  fields: readonly Double kelvin",
+        "  constructors: (Double celsius)",
+        "Bag`1",
+        "  fields: T[] <items>P",
+        "  constructors: (T[] items)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  }
+]

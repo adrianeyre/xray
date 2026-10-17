@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET Framework 3.5 class library, Gradebook, and a .NET 8 console app
+    that uses it (PRD FR-8). Gradebook is built beside this program's
+    Assembly, as a Sibling Assembly, so a Reconstruction makes it a net35
+    project again; and since .NET 8 loads an Assembly built for .NET Framework
+    2.0–4.8 that uses only what .NET 8 has, the program runs it on every OS.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <!--
+      NU1702: a .NET 8 project referencing a .NET Framework one, which NuGet
+      warns may not be fully compatible; Gradebook uses nothing .NET 8 lacks.
+    -->
+    <NoWarn>$(NoWarn);NU1702</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The library's sources are its own project's, not this one's. -->
+    <Compile Remove="Gradebook/**" />
+    <ProjectReference Include="Gradebook/Gradebook.csproj" />
+  </ItemGroup>
+
+</Project>

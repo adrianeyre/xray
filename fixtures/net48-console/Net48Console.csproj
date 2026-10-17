@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET Framework 4.8 console app (PRD FR-8). SDK-style, as every Recovered
+    Solution is (ADR 0004), so it builds on any OS: the SDK supplies the
+    framework's reference assemblies from the
+    Microsoft.NETFramework.ReferenceAssemblies package. It runs only on Windows.
+    Its language version is the framework's default, C# 7.3.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+  </PropertyGroup>
+
+</Project>

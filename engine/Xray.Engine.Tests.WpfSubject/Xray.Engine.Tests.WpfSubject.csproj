@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A WPF app for WpfXamlTests to decompile, whose XAML the markup compiler
+    compiles to BAML in Swatch.g.resources and completes with code of its own:
+    App.xaml, the ApplicationDefinition its Main is generated from, hooking two
+    of the app's events and setting StartupUri; and MainWindow.xaml, with
+    named elements, events, a Style with an EventSetter and a sys:Double.
+    Built on every OS, though it runs only on Windows; never run.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>Swatch</AssemblyName>
+    <RootNamespace>Swatch</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

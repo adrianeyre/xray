@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app that depends on two NuGet packages (PRD FR-10.2):
+    Newtonsoft.Json, whose assembly version, 13.0.0.0, is shared by every
+    13.0.x release, and Serilog, whose 3.1.1 release holds an assembly
+    versioned 2.0.0.0, as its 2.x releases do. Both are strong-named, and
+    `dotnet build` copies them beside the Fixture's Assembly, so a
+    Reconstruction must reference them as packages, not reconstruct them as
+    Sibling Assemblies.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+  </ItemGroup>
+
+</Project>

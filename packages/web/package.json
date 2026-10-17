@@ -1,0 +1,39 @@
+{
+  "name": "@xray/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Xray browser UI — served locally by @xray/server.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts",
+    "./events": "./src/events.ts",
+    "./files-client": "./src/files-client.ts",
+    "./inspect-summary": "./src/inspect-summary.ts",
+    "./reconstruction-client": "./src/reconstruction-client.ts",
+    "./report": "./src/report.ts",
+    "./test-highlight": "./src/test-highlight.ts",
+    "./upload-client": "./src/upload-client.ts",
+    "./viewer-files": "./src/viewer-files.ts"
+  },
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "happy-dom": "^21.0.1",
+    "typescript": "catalog:",
+    "vite": "^8.3.4",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.57.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

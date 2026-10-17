@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The third party's library the copied-binary Fixture uses: built for
+    netstandard2.0, as libraries for any .NET often are, and strong-named with
+    its vendor's own key (Kestrelwood.snk), as no Assembly of the application
+    is. No NuGet package of its name exists.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Kestrelwood.snk</AssemblyOriginatorKeyFile>
+    <Version>2.3.1</Version>
+    <Company>Kestrelwood Software</Company>
+  </PropertyGroup>
+
+</Project>

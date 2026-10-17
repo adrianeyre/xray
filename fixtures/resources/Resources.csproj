@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app whose embedded resources a Reconstruction must recover
+    (PRD FR-12): .resx files of strings, with French and German satellite
+    assemblies; a .resx holding a byte[] (an image) and a stream, by
+    ResXFileRef; files embedded as they are, an image among them, one under a
+    logical name of its own, one private, and one for French only; and a
+    .resources file holding an int and a bool, which no .resx can hold without
+    System.Resources.Extensions, written as it is built (WriteLimits, below).
+    It reads every one of them back at runtime, so a Recovered Solution that
+    lost or renamed any of them behaves differently.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Phrasebook</AssemblyName>
+    <RootNamespace>Phrasebook</RootNamespace>
+    <!-- A satellite assembly must have its main Assembly's version to be loaded. -->
+    <Version>1.4.0</Version>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <!--
+    Every .resx is an EmbeddedResource by default, named after the root
+    namespace and its folder: Phrasebook.Strings.resources,
+    Phrasebook.Phrases.Menu.resources; Strings.fr.resx goes to the French
+    satellite assembly, fr/Phrasebook.resources.dll.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets/flag.png" />
+    <EmbeddedResource Include="Assets/motd.txt" LogicalName="motd" />
+    <EmbeddedResource Include="Assets/secret.txt" LogicalName="Phrasebook.Secret" Access="Private" />
+    <EmbeddedResource Include="Assets/notes.fr.txt" />
+    <EmbeddedResource Include="$(IntermediateOutputPath)Limits.resources" LogicalName="Phrasebook.Limits.resources" />
+  </ItemGroup>
+
+  <!--
+    Writes Limits.resources with .NET's own ResourceWriter, which keeps an int
+    and a bool as they are, as a .resources file that .NET Framework built
+    from a .resx would.
+  -->
+  <UsingTask TaskName="WriteLimits" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <OutputFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Resources" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        using (var writer = new ResourceWriter(OutputFile))
+        {
+            writer.AddResource("MaxPhrases", 42);
+            writer.AddResource("Strict", true);
+            writer.AddResource("Motto", "Say it twice");
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="WriteLimits" BeforeTargets="AssignTargetPaths" Inputs="$(MSBuildProjectFullPath)" Outputs="$(IntermediateOutputPath)Limits.resources">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteLimits OutputFile="$(IntermediateOutputPath)Limits.resources" />
+  </Target>
+
+</Project>

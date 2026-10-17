@@ -1,0 +1,127 @@
+# Versions and publishes @adrianeyre/xray with semantic-release (PRD §9) on
+# every push to main: from the Conventional Commits since the last release, it
+# works out the next version, if any; tests the package at that version as
+# users install it; commits the version and the changelog back to main with
+# [skip ci], and tags it; publishes the tarball to npm with trusted
+# publishing; creates the GitHub release, carrying downloads for Windows, macOS
+# and Linux that run without Node.js installed; then runs the install
+# instructions against what was published, and each download on its OS. release.config.js holds its configuration;
+# docs/processes/releasing.md says how, and what has to be set up first.
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# None by default; each job asks for only what it needs.
+permissions: {}
+
+# One release at a time, never cancelled half-way through publishing.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: 1
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      # The version published, or empty when nothing was released.
+      version: ${{ steps.release.outputs.version }}
+    permissions:
+      # Commits the version and changelog, pushes the tag, and creates the
+      # GitHub release.
+      contents: write
+      # Comments on the issues and pull requests a release includes.
+      issues: write
+      pull-requests: write
+      # npm trusted publishing: no token, and provenance for each version.
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Every commit and tag, for semantic-release to find the last release
+          # and the commits since. It pushes with GITHUB_TOKEN itself.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      # No registry-url: its .npmrc would stand in the way of trusted publishing.
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          package-manager-cache: false
+      # The package bundles the engine, published with the .NET SDK.
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - run: pnpm install --frozen-lockfile
+
+      - id: release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The install instructions the project site and the README give, run as
+  # written against the version just published, from npm, on every OS.
+  verify-install:
+    name: Verify install
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/verify-install.yml
+    with:
+      version: ${{ needs.release.outputs.version }}
+
+  # The downloads the GitHub release carries, as a user gets them: downloaded
+  # from the release, checked against its SHA256SUMS.txt, unpacked, and run on
+  # their own OS, with nothing but the .NET SDK installed, as their README says.
+  verify-downloads:
+    name: download (${{ matrix.target }})
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: win-x64
+            archive: zip
+          - os: macos-latest
+            target: darwin-arm64
+            archive: tar.gz
+          - os: ubuntu-latest
+            target: linux-x64
+            archive: tar.gz
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ needs.release.outputs.version }}
+          TARGET: ${{ matrix.target }}
+          ARCHIVE: ${{ matrix.archive }}
+        run: |
+          file="xray-$TARGET.$ARCHIVE"
+          name="xray-$VERSION-$TARGET"
+          gh release download "v$VERSION" --repo "$REPOSITORY" --pattern "$file" --pattern SHA256SUMS.txt
+          # shasum is on every runner; sha256sum is not on macOS.
+          grep "  $file\$" SHA256SUMS.txt | shasum --algorithm 256 --check -
+          if [ "$ARCHIVE" = zip ]; then unzip -q "$file"; else tar -xzf "$file"; fi
+          if [ "$TARGET" = win-x64 ]; then xray=("cmd" "//c" "$name\\xray.cmd"); else xray=("$name/xray"); fi
+          "${xray[@]}" --help | grep "xray reconstruct" > /dev/null
+          "${xray[@]}" doctor | tee -a "$GITHUB_STEP_SUMMARY"

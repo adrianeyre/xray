@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A negative Fixture: a .NET 8 console app whose class library is left out of
+    its build output, so its Assembly arrives without a reference it needs. Its
+    Recovered Solution cannot compile, which makes the Reconstruction Partial,
+    with the compiler's errors mapped to files and lines (PRD FR-13, FR-15).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The library's source is its own project's, not this one's. -->
+    <Compile Remove="Greetings/**" />
+    <!-- Private="false": Greetings.dll is not copied beside the Assembly. -->
+    <ProjectReference Include="Greetings/Greetings.csproj" Private="false" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+node_modules
+
+# .NET build output.
+bin/
+obj/
+# ...but not the `xray` binary, in the repository or the published package.
+!/packages/cli/bin/
+!/packages/xray/bin/
+
+# The web app, built by Vite.
+/packages/web/dist/
+
+# The project site, built for GitHub Pages.
+/packages/site/dist/
+
+# What @adrianeyre/xray publishes, built by its build.ts when it is packed.
+/packages/xray/dist/
+/packages/xray/engine/
+/packages/xray/web/
+/packages/xray/LICENSE
+/packages/xray/THIRD-PARTY-NOTICES.md
+# The downloads each GitHub release carries, written by its bundle.ts.
+/packages/xray/release/
+
+# Fixtures built by the test tooling, kept between runs.
+/fixtures/.cache/

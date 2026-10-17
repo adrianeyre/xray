@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Xray.Engine.Tests</RootNamespace>
+    <!-- For the unsafe subject in DecompilerSubjects.cs. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!--
+      Run under VSTest, through xunit.runner.visualstudio, on every SDK: from
+      the .NET 10 SDK, Microsoft.Testing.Platform, which xunit.v3 opts into,
+      fails `dotnet test`'s VSTest target, and its own `dotnet test` mode needs
+      SDK 10, and options SDK 8 does not have.
+    -->
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Xray.Engine\Xray.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Resources for ManifestResourcesTests to read back: every .resx is an
+      EmbeddedResource by default (Phrases.fr.resx goes to the French satellite
+      assembly, fr/Xray.Engine.Tests.resources.dll); and a file, embedded as it
+      is, private, under a name of its own.
+    -->
+    <EmbeddedResource Include="Resources/note.txt" LogicalName="Subjects.Note" Access="Private" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      A WPF app for WpfXamlTests to decompile, built first, for net8.0-windows,
+      which this project could not reference, and copied beside the tests with
+      its PDB, as WpfSubject/Swatch.dll.
+    -->
+    <ProjectReference Include="..\Xray.Engine.Tests.WpfSubject\Xray.Engine.Tests.WpfSubject.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+    <None Include="..\Xray.Engine.Tests.WpfSubject\bin\$(Configuration)\net8.0-windows\Swatch.dll;..\Xray.Engine.Tests.WpfSubject\bin\$(Configuration)\net8.0-windows\Swatch.pdb" Link="WpfSubject\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The native Fixture: a Native Executable the engine must tell from a Managed Assembly. -->
+    <None Include="..\..\fixtures\native\hello.exe" Link="Fixtures\hello.exe" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

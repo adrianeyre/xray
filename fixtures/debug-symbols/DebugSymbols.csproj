@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    PDB use (FR-4): source files laid out unlike the namespaces they declare,
+    with locals worth naming, so a Reconstruction that used the PDB built
+    beside the Assembly has the original's local names and file layout. Asked
+    for a full PDB, the .NET SDK writes a Windows one on Windows and a portable
+    one elsewhere, so the CI matrix reconstructs it with each format.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Ledger</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+</Project>

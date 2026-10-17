@@ -1,0 +1,243 @@
+[
+  {
+    "args": ["framework"],
+    "expected": {
+      "stdout": ["Measures: .NETStandard,Version=v2.0"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["units"],
+    "expected": {
+      "stdout": [
+        "Length: cm, km, m, mi",
+        "Mass: g, kg, lb",
+        "Volume: gal, l, ml"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["convert", "5km", "mi"],
+    "expected": {
+      "stdout": ["5 km = 3.107 mi"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["convert", "2.5lb", "g"],
+    "expected": {
+      "stdout": ["2.5 lb = 1133.981 g"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["convert", "1gal", "l"],
+    "expected": {
+      "stdout": ["1 gal = 3.785 l"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["convert", "3kg", "m"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Cannot convert kg to m: Mass is not Length."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["convert", "3xx", "m"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Unknown unit \"xx\"."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["convert", "abc", "m"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No amount in \"abc\"."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["convert", "1km"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Too few operands."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["add", "1km", "250m", "0.5mi"],
+    "expected": {
+      "stdout": ["2.055 km"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["add"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Nothing to add."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["add", "1kg", "1m"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Cannot convert m to kg: Length is not Mass."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["add", "2l"],
+    "expected": {
+      "stdout": ["2 l"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["scale", "3km", "1.5"],
+    "expected": {
+      "stdout": ["4.5 km"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["scale", "3km", "half"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Factors must be numbers."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["compare", "1mi", "1500m"],
+    "expected": {
+      "stdout": ["1 mi > 1500 m"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1000g", "1kg"],
+    "expected": {
+      "stdout": ["1000 g = 1 kg"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1lb", "1kg"],
+    "expected": {
+      "stdout": ["1 lb < 1 kg"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["compare", "1l", "1kg"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Cannot convert kg to l: Mass is not Volume."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["range", "0m", "1m", "25cm"],
+    "expected": {
+      "stdout": ["0 m", "0.25 m", "0.5 m", "0.75 m", "1 m"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["range", "0m", "1m", "0m"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["The step must be more than nothing."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["range", "2l", "1l", "1ml"],
+    "expected": {
+      "stdout": [],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["describe", "0kg"],
+    "expected": {
+      "stdout": ["no kilograms"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["describe", "-2m"],
+    "expected": {
+      "stdout": ["a shortfall of 2 m"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["describe", "1.5l"],
+    "expected": {
+      "stdout": ["1.5 l of volume"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["describe", "hello"],
+    "expected": {
+      "stdout": ["the text \"hello\""],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["describe"],
+    "expected": {
+      "stdout": ["nothing at all"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: NetStandard20Library <framework|units|convert|add|scale|compare|range|describe> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: NetStandard20Library <framework|units|convert|add|scale|compare|range|describe> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  }
+]

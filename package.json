@@ -1,0 +1,62 @@
+{
+  "name": "xray",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Xray turns compiled .NET assemblies back into buildable, runnable C# solutions.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "pnpm build:engine && pnpm build:web && pnpm build:site && pnpm xray ui",
+    "build:engine": "dotnet build engine/Xray.Engine --configuration Release",
+    "build:fixtures": "tsx fixtures/src/build-fixtures.ts",
+    "build:web": "pnpm --filter @xray/web build",
+    "build:site": "pnpm --filter @xray/site build",
+    "benchmark": "tsx packages/core/src/benchmark/run-benchmark.ts",
+    "real-app": "tsx packages/core/src/real-app/run-real-app.ts",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc && pnpm --recursive --parallel run typecheck",
+    "test": "vitest run",
+    "xray": "node packages/cli/bin/xray.js",
+    "sandcastle": "tsx .sandcastle/main.ts"
+  },
+  "packageManager": "pnpm@12.10.0",
+  "engines": {
+    "node": ">=26",
+    "pnpm": ">=12"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=12",
+      "onFail": "error"
+    }
+  },
+  "devDependencies": {
+    "@ai-hero/sandcastle": "^0.12.0",
+    "@eslint/js": "^10.0.1",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.10",
+    "@semantic-release/npm": "^13.2.0",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@types/node": "catalog:",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "semantic-release": "^25.0.9",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "catalog:"
+  }
+}

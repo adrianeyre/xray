@@ -1,0 +1,36 @@
+export {
+  FIXTURES_DIRECTORY,
+  NATIVE_EXECUTABLE_FIXTURE,
+  buildFixture,
+  isGuiFixture,
+  listFixtures,
+  readFixtureInputs,
+  restoreFixture,
+  type BuiltFixture,
+  type FixtureInput,
+  type FixtureOptions,
+} from "./fixtures.js";
+export {
+  DEFAULT_ALIVE_FOR_MS,
+  isNetFramework,
+  launchAssembly,
+  runAssembly,
+  runsOn,
+  type Launch,
+  type LaunchOptions,
+  type ProgramRun,
+  type RunOptions,
+} from "./run-assembly.js";
+export {
+  compareRuns,
+  formatRoundTrip,
+  roundTrip,
+  type Difference,
+  type LineDifference,
+  type Reconstruct,
+  type RoundTripFailure,
+  type RoundTripOptions,
+  type RoundTripResult,
+  type RoundTripRun,
+  type SmokeTest,
+} from "./round-trip.js";

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The netstandard20-library Fixture's library. Its language version is the
+    default for netstandard2.0, C# 7.3: tuples (System.ValueTuple, which
+    netstandard2.0 has), pattern matching, readonly structs and in parameters,
+    whose attributes the compiler declares in the Assembly itself, as
+    netstandard2.0 has none of them.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>

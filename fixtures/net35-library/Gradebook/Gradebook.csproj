@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The net35-library Fixture's library: .NET Framework 3.5, SDK-style, so it
+    builds on any OS from the Microsoft.NETFramework.ReferenceAssemblies
+    package. Its Assembly records no TargetFrameworkAttribute, which compilers
+    wrote only from .NET Framework 4.0; its CLR, v2.0.50727, and its reference
+    to System.Core 3.5.0.0, for LINQ, say what it was built for. Its language
+    version is the framework's default, C# 7.3.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+  </PropertyGroup>
+
+</Project>

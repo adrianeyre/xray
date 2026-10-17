@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The cyclic-reference Fixture's plugin, which references the program back. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Built against the stand-in, whose Assembly is named as the program's is,
+      not copied, and not passed on to the program, which declares the same
+      type itself: at run time, the program's own Assembly answers for it.
+    -->
+    <ProjectReference Include="../HostContract/HostContract.csproj" Private="false" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

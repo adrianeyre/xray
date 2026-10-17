@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A negative Fixture: a .NET 8 console app and a plugin library that reference
+    one another, as projects cannot. The plugin is built against HostContract, a
+    stand-in with this program's assembly name, so its Assembly references this
+    one, while this one references it. Reconstructed, the cycle is reported
+    rather than crashed on, and the plugin's reference back to this program is
+    left out, so its project does not build (PRD FR-10.3, FR-15).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The other projects' sources are their own, not this one's. -->
+    <Compile Remove="Plugin/**;HostContract/**" />
+    <ProjectReference Include="Plugin/Plugin.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,297 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Generics <stack|max|longest|pairs|sum|concat|format|variance|constraints|statics|defaults> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: Generics <stack|max|longest|pairs|sum|concat|format|variance|constraints|statics|defaults> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["stack", "alpha", "be", "gamma"],
+    "expected": {
+      "stdout": [
+        "3 pushed, top first: [gamma, be, alpha]",
+        "12 characters in all",
+        "ArrayStack<Int32> of lengths, top first: [5, 2, 5]",
+        "popped gamma, leaving be on top"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["stack", "solo"],
+    "expected": {
+      "stdout": [
+        "1 pushed, top first: [solo]",
+        "4 characters in all",
+        "ArrayStack<Int32> of lengths, top first: [4]",
+        "popped solo, leaving nothing on top"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["stack"],
+    "expected": {
+      "stdout": [
+        "0 pushed, top first: []",
+        "0 characters in all",
+        "ArrayStack<Int32> of lengths, top first: []"
+      ],
+      "stderr": ["The stack is empty."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["max", "3", "-7", "12", "12", "5"],
+    "expected": {
+      "stdout": ["max of 3, -7, 12, 12, 5 is 12"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["max", "-5"],
+    "expected": {
+      "stdout": ["max of -5 is -5"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["max"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least one int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["max", "1", "two"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"two\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["longest", "pear", "banana", "cherry", "fig"],
+    "expected": {
+      "stdout": ["the longest is banana"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["longest"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least one word."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["pairs", "left", "right"],
+    "expected": {
+      "stdout": [
+        "swapped: right left",
+        "Pair<String, Int32> (right, 4)",
+        "Pair<Int32, String> (4, right)",
+        "Pair<String, Boolean> (right, False)",
+        "Pair<Pair<String, Int32>, Pair<Int32, String>> ((right, 4), (4, right))"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["pairs", "a"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Generics pairs <first> <second>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["sum", "1", "2", "3"],
+    "expected": {
+      "stdout": ["int: 6", "long: 6", "double: 6", "decimal: 6"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "2147483647", "1"],
+    "expected": {
+      "stdout": [
+        "int: -2147483648",
+        "long: 2147483648",
+        "double: 2147483648",
+        "decimal: 2147483648"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "0.1", "0.2"],
+    "expected": {
+      "stdout": [
+        "int: \"0.1\" is not a valid Int32",
+        "long: \"0.1\" is not a valid Int64",
+        "double: 0.30000000000000004",
+        "decimal: 0.3"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum"],
+    "expected": {
+      "stdout": ["int: 0", "long: 0", "double: 0", "decimal: 0"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "4", "x"],
+    "expected": {
+      "stdout": [
+        "int: \"x\" is not a valid Int32",
+        "long: \"x\" is not a valid Int64",
+        "double: \"x\" is not a valid Double",
+        "decimal: \"x\" is not a valid Decimal"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["concat", "ab", "cde", "f"],
+    "expected": {
+      "stdout": ["concatenated: \"abcdef\"", "longest length: max 3"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["concat"],
+    "expected": {
+      "stdout": ["concatenated: \"\"", "longest length: max -2147483648"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["format", "255", "-1"],
+    "expected": {
+      "stdout": [
+        "HexFormatter: FF, then 3E418",
+        "HexFormatter: FFFFFFFF, then FFFFFFFFFFFFFC18",
+        "FixedFormatter: 255.00, then 255000.00",
+        "FixedFormatter: -1.00, then -1000.00"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["variance"],
+    "expected": {
+      "stdout": [
+        "a producer of strings, as a producer of objects, produces hello",
+        "a consumer of objects, as a consumer of strings: Object describer got text",
+        "a Transform<Object, String> as a Transform<String, Object> gives <x>",
+        "a Constant<String> is an IProducer<Object>: True, an IBox<String>: True, an IBox<Object>: False",
+        "a Describer<Object> is an IConsumer<String>: True; a Describer<String> is an IConsumer<Object>: False",
+        "a Describer<String> as an IConsumer<Object> consumes nothing",
+        "a List<String> is an IEnumerable<Object>: True, an IReadOnlyList<Object>: True, an IList<Object>: False",
+        "storing an int in a string[] seen as an object[] throws ArrayTypeMismatchException"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["constraints"],
+    "expected": {
+      "stdout": [
+        "ArrayStack<T>: T",
+        "Pair<TFirst, TSecond>: TFirst; TSecond",
+        "IProducer<T>: T (out)",
+        "IConsumer<T>: T (in)",
+        "Transform<T, TResult>: T (in); TResult (out)",
+        "IBox<T>: T",
+        "IMonoid<TSelf>: TSelf (IMonoid<TSelf>)",
+        "Registry<T>: T",
+        "Algorithms.Describe<T>: T",
+        "Algorithms.Make<T>: T (new())",
+        "Algorithms.Max<T>: T (IComparable<T>)",
+        "Algorithms.NameOf<TEnum>: TEnum (struct, new(), Enum, ValueType)",
+        "Algorithms.OrDefault<T>: T (struct, new(), ValueType)",
+        "Algorithms.SizeOf<T>: T (struct, new(), unmanaged, ValueType)",
+        "Algorithms.Swap<T>: T",
+        "Algorithms.TopOrNull<T>: T (class)",
+        "Algorithms.Upcast<TDerived, TBase>: TDerived (TBase); TBase",
+        "Formatter.Format<T>: T (IFormattable)",
+        "HexFormatter.Format<T>: T (IFormattable)",
+        "Monoid.Concat<T>: T (IMonoid<T>)",
+        "Monoid.Sum<T>: T (INumber<T>)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["statics"],
+    "expected": {
+      "stdout": [
+        "Int32: 1",
+        "Int32: 2",
+        "String: 1",
+        "List<Int32>: 1",
+        "Int32: 3",
+        "Outer<Int32>.Inner<String> holds 1 and one",
+        "Outer<String>.Inner<Int32> holds two and 2"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["defaults"],
+    "expected": {
+      "stdout": [
+        "Int32 0",
+        "String null",
+        "Nullable<Int32> null",
+        "Pair<Int32, String> (0, )",
+        "Int32 0",
+        "Int32 5",
+        "Object up",
+        "default(Tally) is tally 0, Make<Tally>() is tally 1, Make<List<int>>() has 0 items",
+        "sizes: int 4, long 8, char 2, decimal 16, Pair<Byte, Int32> 8",
+        "Friday, no DayOfWeek is 9"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  }
+]

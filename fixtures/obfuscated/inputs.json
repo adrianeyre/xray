@@ -1,0 +1,84 @@
+[
+  {
+    "args": ["pancakes", "4"],
+    "expected": {
+      "stdout": [
+        "Pancakes for 4:",
+        "  200 g flour",
+        "  480 ml milk",
+        "  4 eggs"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["pancakes", "1"],
+    "expected": {
+      "stdout": ["Pancakes for 1:", "  50 g flour", "  120 ml milk", "  1 egg"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["omelette", "12"],
+    "expected": {
+      "stdout": [
+        "Omelette for 12:",
+        "  24 eggs",
+        "  120 g butter",
+        "  36 chives"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["soup", "2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is no recipe for soup. Try omelette, pancakes."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["Pancakes", "2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is no recipe for Pancakes. Try omelette, pancakes."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["pancakes", "0"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Servings must be a whole number from 1 to 12, not 0."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["omelette", "13"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Servings must be a whole number from 1 to 12, not 13."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["omelette", "two"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Servings must be a whole number from 1 to 12, not two."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["pancakes"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Obfuscated <recipe> <servings>"],
+      "exitCode": 1
+    }
+  }
+]

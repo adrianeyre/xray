@@ -1,0 +1,231 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: ClassesStructs <shapes|dispatch|construct|points|structs|thermostat|grid> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: ClassesStructs <shapes|dispatch|construct|points|structs|thermostat|grid> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["shapes", "circle:1", "rect:2x3", "square:1.5", "triangle:5,5,6"],
+    "expected": {
+      "stdout": [
+        "#1 circle: circle: area 3.142, perimeter 6.283",
+        "#2 rectangle: rectangle 2 x 3: area 6",
+        "#3 square: square 1.5 x 1.5: area 2.25",
+        "#4 triangle: triangle: area 12, perimeter 16",
+        "by area: #3 square, #1 circle, #2 rectangle, #4 triangle",
+        "#3 square doubled: square 3 x 3: area 9",
+        "#1 circle doubled: circle: area 12.566, perimeter 12.566",
+        "#2 rectangle doubled: rectangle 4 x 6: area 24",
+        "#4 triangle cannot be scaled",
+        "7 shapes made"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["shapes", "circle:0.5", "hexagon:2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"hexagon:2\" is not a shape."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["shapes", "triangle:1,2,3"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No triangle has sides 1, 2 and 3."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["shapes", "rect:2x-1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"-1\" is not a positive number."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["dispatch"],
+    "expected": {
+      "stdout": [
+        "through Square: square of side 3",
+        "through Rectangle: square 3 x 3: area 9",
+        "through IShape: square 3 x 3: area 9",
+        "a triangle through IShape: equilateral triangle: area 1.732, perimeter 6",
+        "#1 square is a Shape: True, an IScalable: True; #2 equilateral triangle is an IScalable: False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["construct"],
+    "expected": {
+      "stdout": [
+        "new Derived():",
+        "  static Derived()",
+        "  static Base()",
+        "  Base() sees Derived(initialized, unassigned)",
+        "  Derived() sees Derived(initialized, assigned)",
+        "new MostDerived():",
+        "  Base() sees MostDerived(initialized, unassigned)",
+        "  Derived() sees MostDerived(initialized, assigned)",
+        "  MostDerived()",
+        "Greet through Base: Base.Greet, through Derived: Derived.Greet",
+        "Describe through Base: MostDerived(initialized, assigned)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["points", "3,4", "-1,2"],
+    "expected": {
+      "stdout": [
+        "a = (3, 4), b = (-1, 2)",
+        "a + b = (2, 6)",
+        "a - b = (4, 2)",
+        "-a = (-3, -4)",
+        "a * 3 = (9, 12)",
+        "a == b is False, a != b is True, a.Equals((object)b) is False",
+        "a == Origin is False, |a| = 7",
+        "two boxes of a: the same object is False, equal is True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["points", "0,0", "0,0"],
+    "expected": {
+      "stdout": [
+        "a = (0, 0), b = (0, 0)",
+        "a + b = (0, 0)",
+        "a - b = (0, 0)",
+        "-a = (0, 0)",
+        "a * 3 = (0, 0)",
+        "a == b is True, a != b is False, a.Equals((object)b) is True",
+        "a == Origin is True, |a| = 0",
+        "two boxes of a: the same object is False, equal is True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["points", "1,2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: ClassesStructs points <x,y> <x,y>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["points", "1;2", "3,4"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"1;2\" is not a point."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["structs"],
+    "expected": {
+      "stdout": [
+        "new Counter() is Counter(10), default(Counter) is Counter(0), new Counter[1][0] is Counter(0), new Counter(5) is Counter(5)",
+        "after b = a; b.Increment(): a is Counter(10), b is Counter(11)",
+        "after boxing a and incrementing it twice: a is Counter(10), the box is Counter(12)",
+        "after array[0].Increment(): array[0] is Counter(2), array[1] is Counter(1)",
+        "after list[0].Increment(): list[0] is Counter(1)",
+        "after Bump(ref a): a is Counter(11)",
+        "after Ignore(a): a is Counter(11)",
+        "after Frozen.Increment() on a readonly field: Frozen is Counter(1)",
+        "two circles of radius 1 are equal: False; two points (1, 2) are equal: True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["thermostat", "25", "25", "35", "28"],
+    "expected": {
+      "stdout": [
+        "  alarm armed",
+        "set to 25",
+        "  changed from 20 to 25",
+        "set to 25",
+        "set to 35",
+        "  changed from 25 to 35",
+        "  ALARM: too hot at 35",
+        "set to 28",
+        "  changed from 35 to 28",
+        "  alarm disarmed",
+        "set to 40",
+        "  changed from 28 to 40",
+        "set to 0",
+        "ends at 0"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["thermostat", "warm"],
+    "expected": {
+      "stdout": ["  alarm armed", "set to warm"],
+      "stderr": ["\"warm\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["grid", "4", "3", "0,0", "3,2", "1,1", "4,0", "1,1", "-1,0"],
+    "expected": {
+      "stdout": [
+        "(4, 0) is outside the grid",
+        "(1, 1) is already marked c",
+        "(-1, 0) is outside the grid",
+        "a...",
+        ".c..",
+        "...b",
+        "3 of 12 cells marked, the first is a"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["grid", "0", "3"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["A grid cannot be 0 x 3."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["grid", "2"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: ClassesStructs grid <width> <height> [x,y...]"],
+      "exitCode": 1
+    }
+  }
+]

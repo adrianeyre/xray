@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 WPF app (PRD FR-12, FR-14), laid out as Visual Studio's template
+    lays one out: each XAML file a Page beside its code-behind, which the
+    markup compiler compiles to BAML in Tally.g.resources and completes with
+    the code it generates (each named element's field, InitializeComponent,
+    and the IComponentConnector and IStyleConnector that hook its events), and
+    App.xaml the ApplicationDefinition it generates Main from. App.xaml sets
+    StartupUri and a Startup handler, which the markup compiler writes into
+    App's InitializeComponent rather than its BAML, and merges
+    Themes/Palette.xaml, a ResourceDictionary of colours, sizes and a keyed
+    Style, with an implicit Style of its own; MainWindow.xaml has a Style
+    BasedOn it with an EventSetter, and uses Controls/CountBadge.xaml, a
+    UserControl in another namespace with a public field; and
+    Assets/tally.png, the window's icon, is a Resource, in Tally.g.resources
+    too. Its target framework is net8.0-windows, whose Assembly records
+    Windows 7.0 as its platform; it builds on every OS (EnableWindowsTargeting)
+    and runs only on Windows.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Tally</AssemblyName>
+    <RootNamespace>Tally</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\tally.png" />
+  </ItemGroup>
+
+</Project>

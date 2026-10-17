@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The benchmark Fixture (PRD §8): a .NET 8 console app of about 2,000
+    top-level types and 5 MB, the size of Assembly a Reconstruction must finish
+    within 60 s, excluding dotnet build. Its source is generated as it is built
+    (GenerateModules, below), rather than committed: 40 namespaces of 40 types
+    each, that cycle through eight kinds (a class with LINQ, a switch and
+    try/catch/finally; a struct with operators; an interface and a class
+    implementing it; an enum and its extension methods; a record; a generic
+    class; async/await; a class with an event and an iterator), every one of
+    which the program computes from its argument, so a Recovered Solution
+    that changed what any of them does prints something else.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Ledgerworks</AssemblyName>
+    <RootNamespace>Ledgerworks</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The generator runs in MSBuild, not in the Assembly. -->
+    <Compile Remove="Generator/**" />
+  </ItemGroup>
+
+  <UsingTask TaskName="GenerateModules" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <OutputDirectory ParameterType="System.String" Required="true" />
+      <Modules ParameterType="System.Int32" Required="true" />
+      <TypesPerModule ParameterType="System.Int32" Required="true" />
+      <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Class" Language="cs" Source="$(MSBuildThisFileDirectory)Generator/GenerateModules.cs" />
+    </Task>
+  </UsingTask>
+
+  <Target Name="GenerateModules" BeforeTargets="BeforeCompile;CoreCompile">
+    <GenerateModules OutputDirectory="$(IntermediateOutputPath)Generated" Modules="40" TypesPerModule="40">
+      <Output TaskParameter="Files" ItemName="Compile" />
+    </GenerateModules>
+  </Target>
+
+</Project>

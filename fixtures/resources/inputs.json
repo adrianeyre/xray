@@ -1,0 +1,297 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: Phrasebook <manifest|say|welcome|menu|file|image|anthem|limits> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["manifest"],
+    "expected": {
+      "stdout": [
+        "Phrasebook 1.4.0.0:",
+        "  Phrasebook.Assets.flag.png (81 bytes)",
+        "  Phrasebook.Images.resources (430 bytes)",
+        "  Phrasebook.Limits.resources (282 bytes)",
+        "  Phrasebook.Phrases.Menu.resources (267 bytes)",
+        "  Phrasebook.Secret (27 bytes)",
+        "  Phrasebook.Strings.resources (575 bytes)",
+        "  motd (52 bytes)",
+        "[de] Phrasebook.resources 1.4.0.0 de:",
+        "  Phrasebook.Strings.de.resources (255 bytes)",
+        "[es] no satellite assembly",
+        "[fr] Phrasebook.resources 1.4.0.0 fr:",
+        "  Phrasebook.Assets.notes.txt (32 bytes)",
+        "  Phrasebook.Phrases.Menu.fr.resources (237 bytes)",
+        "  Phrasebook.Strings.fr.resources (378 bytes)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Greeting"],
+    "expected": {
+      "stdout": ["Greeting = Hello"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Greeting", "fr"],
+    "expected": {
+      "stdout": ["Greeting = Bonjour"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Greeting", "de"],
+    "expected": {
+      "stdout": ["Greeting = Hallo"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Greeting", "fr-CA"],
+    "expected": {
+      "stdout": ["Greeting = Bonjour"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Thanks", "fr"],
+    "expected": {
+      "stdout": ["Thanks = Thank you"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Thanks", "de"],
+    "expected": {
+      "stdout": ["Thanks = Danke sch\\u00F6n"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Farewell", "de"],
+    "expected": {
+      "stdout": ["Farewell = Goodbye"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Cafe"],
+    "expected": {
+      "stdout": ["Cafe = Coffee shop"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Cafe", "fr"],
+    "expected": {
+      "stdout": ["Cafe = Caf\\u00E9 \\u00AB au lait \\u00BB"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Padded"],
+    "expected": {
+      "stdout": ["Padded =   mind the spaces  "],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Markup"],
+    "expected": {
+      "stdout": ["Markup = <b>\"Fish\" & 'chips'</b>"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Lines"],
+    "expected": {
+      "stdout": ["Lines = first line\\r\\nsecond line\\n\\ttabbed third"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Empty"],
+    "expected": {
+      "stdout": ["Empty = "],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["say", "Missing"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No phrase \"Missing\"."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["say"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Phrasebook say <phrase> [culture]"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["welcome", "Ada", "3"],
+    "expected": {
+      "stdout": ["Welcome, Ada! You have 3 new phrases."],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["welcome", "Ada", "3", "fr"],
+    "expected": {
+      "stdout": ["Bienvenue, Ada ! Vous avez 3 nouvelles phrases."],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["welcome", "Ada", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: Phrasebook welcome <name> <count> [culture]"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["menu"],
+    "expected": {
+      "stdout": ["Coffee: Coffee", "Tea: Tea", "Water: Water"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["menu", "fr"],
+    "expected": {
+      "stdout": ["Coffee: Caf\\u00E9", "Tea: Th\\u00E9", "Water: Water"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["menu", "de"],
+    "expected": {
+      "stdout": ["Coffee: Coffee", "Tea: Tea", "Water: Water"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["file", "motd"],
+    "expected": {
+      "stdout": [
+        "| Welcome aboard. Mind the gap.",
+        "| Phrases change daily.",
+        "| "
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["file", "Phrasebook.Secret"],
+    "expected": {
+      "stdout": ["| The password is swordfish.", "| "],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["file", "Phrasebook.Assets.notes.txt", "fr"],
+    "expected": {
+      "stdout": ["| Notes en francais.", "| Bon voyage !", "| "],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["file", "Phrasebook.Assets.notes.txt"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No file \"Phrasebook.Assets.notes.txt\"."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["file", "nope"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["No file \"nope\"."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["image"],
+    "expected": {
+      "stdout": [
+        "file: 6x4 PNG, 81 bytes, FNV-1a f577601f",
+        "resx: 6x4 PNG, 81 bytes, FNV-1a f577601f",
+        "same: True",
+        "caption: The flag, in three bands"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["anthem"],
+    "expected": {
+      "stdout": [
+        "60 bytes:",
+        "| Allons enfants de la Patrie,",
+        "| Le jour de gloire est arrive !"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["limits"],
+    "expected": {
+      "stdout": [
+        "MaxPhrases: 42 (System.Int32)",
+        "Strict: True (System.Boolean)",
+        "Motto: Say it twice (System.String)",
+        "Missing: none"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["bogus"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"bogus\".",
+        "Usage: Phrasebook <manifest|say|welcome|menu|file|image|anthem|limits> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  }
+]

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app built from three projects (PRD FR-10.3, FR-11): this
+    one, and two class libraries it references, Inventory and Pricing, which
+    references Inventory too. Their Assemblies are built beside this one's, as
+    Sibling Assemblies, so a Reconstruction makes each its own project again,
+    wired with ProjectReference.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The libraries' sources are their own projects', not this one's. -->
+    <Compile Remove="Inventory/**;Pricing/**" />
+    <ProjectReference Include="Inventory/Inventory.csproj" />
+    <ProjectReference Include="Pricing/Pricing.csproj" />
+  </ItemGroup>
+
+</Project>

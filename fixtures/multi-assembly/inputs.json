@@ -1,0 +1,186 @@
+[
+  {
+    "args": ["stock"],
+    "expected": {
+      "stdout": [
+        "HAM-01 Hammer (Tools): 16 at 9.99",
+        "HOE-07 Hoe (Garden): 5 at 15.00",
+        "POT-10 Pot (Kitchen): 2 at 32.25",
+        "SAW-02 Saw (Tools): 3 at 24.50",
+        "Tools: 233.34",
+        "Garden: 75.00",
+        "Kitchen: 64.50"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "3"],
+    "expected": {
+      "stdout": [
+        "3 x HAM-01 Hammer (Tools) = 29.97",
+        "Total: 29.97",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "12", "bulk"],
+    "expected": {
+      "stdout": [
+        "12 x HAM-01 Hammer (Tools) = 119.88",
+        "Less bulk, 10 or more: 11.99",
+        "Total: 107.89",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "9", "bulk"],
+    "expected": {
+      "stdout": [
+        "9 x HAM-01 Hammer (Tools) = 89.91",
+        "Total: 89.91",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "HOE-07", "2", "garden"],
+    "expected": {
+      "stdout": [
+        "2 x HOE-07 Hoe (Garden) = 30.00",
+        "Less garden sale: 7.50",
+        "Total: 22.50",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "2", "garden"],
+    "expected": {
+      "stdout": [
+        "2 x HAM-01 Hammer (Tools) = 19.98",
+        "Total: 19.98",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "SAW-02", "3", "half"],
+    "expected": {
+      "stdout": [
+        "3 x SAW-02 Saw (Tools) = 73.50",
+        "Less half price on HAM-01 and SAW-02: 36.75",
+        "Total: 36.75",
+        "Quotes compare by value."
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["quote", "POT-10", "3"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Only 2 of POT-10 left, but 3 wanted.", "Short by 1."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["quote", "POT-10", "0"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["quantity 0: Quote 1 to 1000."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "1001"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["quantity 1001: Quote 1 to 1000."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["quote", "XYZ-99", "1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is no XYZ-99 in stock."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "1", "free"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is no discount \"free\"."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["quote", "HAM-01", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: MultiAssembly stock | quote <sku> <quantity> [bulk|garden|half] | take <sku> <quantity>"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["take", "SAW-02", "2"],
+    "expected": {
+      "stdout": [
+        "SAW-02: 3 -> 1",
+        "HAM-01 Hammer (Tools): 16 at 9.99",
+        "HOE-07 Hoe (Garden): 5 at 15.00",
+        "POT-10 Pot (Kitchen): 2 at 32.25",
+        "SAW-02 Saw (Tools): 1 at 24.50",
+        "Tools: 184.34",
+        "Garden: 75.00",
+        "Kitchen: 64.50"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["take", "POT-10", "5"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Only 2 of POT-10 left, but 5 wanted.", "Short by 3."],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["take", "NOP-00", "1"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["There is no NOP-00 in stock."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: MultiAssembly stock | quote <sku> <quantity> [bulk|garden|half] | take <sku> <quantity>"
+      ],
+      "exitCode": 1
+    }
+  }
+]

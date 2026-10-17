@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="dial.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAT0lEQVR42mOQqzgBR79OaMARtcQZaGo6
+        kMtAU9OhFtDOdJAFNDUdxQIaxTYDTU2HWkDTlMowmg9G88FoPhjNB6P5YDQfjOaD0Xwwmg/ACACxBZBb
+        9p56SwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <metadata name="ticker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="hints.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>98, 17</value>
+  </metadata>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAgBAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAADIKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAyCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP8AAAAAAAAAAAAAAAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAMgoKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAyCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP8AAAAAAAAAAAAA
+        AADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/wAA
+        AAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/AAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAyCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP8AAAAAAAAAAAAAAADIKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAMgo
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAA
+        AAAAAAAAAAAAAMgoKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/wAA
+        AAAAAAAAAAAAAAAAAAAAAAAAyCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAADIKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyCgo/8goKP/IKCj/yCgo/8goKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMgoKP/IKCj/yCgo/8go
+        KP/IKCj/yCgo/8goKP/IKCj/yCgo/8goKP/IKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAADIKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+</value>
+  </data>
+</root>

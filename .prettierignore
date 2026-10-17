@@ -1,0 +1,9 @@
+# The PRD, ADRs and process docs are the canon; their formatting is the author's.
+docs/
+
+# Harness configuration; not part of the workspace.
+.sandcastle/
+
+# Written by pnpm.
+pnpm-lock.yaml
+pnpm-workspace.yaml

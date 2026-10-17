@@ -1,0 +1,545 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: RecordsPatterns <points|money|people|tags|temperatures|endpoint|members|shapes|numbers|words|characters|weather|order|inspect|suits> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: RecordsPatterns <points|money|people|tags|temperatures|endpoint|members|shapes|numbers|words|characters|weather|order|inspect|suits> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["points", "1", "2", "1", "2"],
+    "expected": {
+      "stdout": [
+        "Point { X = 1, Y = 2, ManhattanLength = 3 } and Point { X = 1, Y = 2, ManhattanLength = 3 }",
+        "equal: True, by Equals: True, same hash: True",
+        "Point { X = 11, Y = 2, ManhattanLength = 13 }, leaving Point { X = 1, Y = 2, ManhattanLength = 3 }",
+        "translated copy Point { X = 2, Y = 3, ManhattanLength = 5 }, original Point { X = 1, Y = 2, ManhattanLength = 3 }",
+        "deconstructed: x 1, y 2, 3 blocks away"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["points", "3", "-4", "5", "6"],
+    "expected": {
+      "stdout": [
+        "Point { X = 3, Y = -4, ManhattanLength = 7 } and Point { X = 5, Y = 6, ManhattanLength = 11 }",
+        "equal: False, by Equals: False, same hash: False",
+        "Point { X = 13, Y = -4, ManhattanLength = 17 }, leaving Point { X = 3, Y = -4, ManhattanLength = 7 }",
+        "translated copy Point { X = 4, Y = -3, ManhattanLength = 7 }, original Point { X = 3, Y = -4, ManhattanLength = 7 }",
+        "deconstructed: x 5, y 6, 11 blocks away"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["points", "1", "x", "2", "3"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"x\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["money", "1.0", "GBP", "1.00", "GBP"],
+    "expected": {
+      "stdout": [
+        "Money { Amount = 1.0, Currency = GBP } and Money { Amount = 1.00, Currency = GBP }: equal True",
+        "in euros: Money { Amount = 1.0, Currency = EUR }",
+        "sum: Money { Amount = 2.00, Currency = GBP }"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["money", "2", "GBP", "3", "USD"],
+    "expected": {
+      "stdout": [
+        "Money { Amount = 2, Currency = GBP } and Money { Amount = 3, Currency = USD }: equal False",
+        "in euros: Money { Amount = 2, Currency = EUR }"
+      ],
+      "stderr": ["Cannot add USD to GBP."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["money", "2", "GBP"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: RecordsPatterns money <amount> <currency> <amount> <currency>"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["people", "Ann", "3", "2"],
+    "expected": {
+      "stdout": [
+        "Employee { Name = Ann, Tags = System.String[], Level = 3, Grade = senior }",
+        "Manager { Name = Ann, Tags = System.String[], Level = 3, Grade = senior, Reports = 2 }",
+        "senior; same employee: True; employee and manager equal: False, as Employees: False",
+        "promoted: Manager Manager { Name = Ann, Tags = System.String[], Level = 4, Grade = senior, Reports = 2 }",
+        "deconstructed: Ann, level 3, 2 reports",
+        "tagged alike: False; a copy of tagged: True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["people", "Bo", "7", "0"],
+    "expected": {
+      "stdout": [
+        "Employee { Name = Bo, Tags = System.String[], Level = 7, Grade = principal }",
+        "Manager { Name = Bo, Tags = System.String[], Level = 7, Grade = principal, Reports = 0 }",
+        "principal; same employee: True; employee and manager equal: False, as Employees: False",
+        "promoted: Manager Manager { Name = Bo, Tags = System.String[], Level = 8, Grade = principal, Reports = 0 }",
+        "deconstructed: Bo, level 7, 0 reports",
+        "tagged alike: False; a copy of tagged: True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["people", "Ann"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: RecordsPatterns people <name> <level> <reports>"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["tags", " Foo ", "bar", "BAR"],
+    "expected": {
+      "stdout": [
+        "[ Foo ]: Tag { Name = foo }, deconstructed [foo], equal to the tag \"foo\": True",
+        "[bar]: Tag { Name = bar }, deconstructed [bar], equal to the tag \"bar\": True",
+        "[BAR]: Tag { Name = bar }, deconstructed [bar], equal to the tag \"bar\": True"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["temperatures", "21.5", "21.55", "30", "-40"],
+    "expected": {
+      "stdout": [
+        "Temperature { 21.5 C, 70.7 F } and Temperature { 21.55 C, 70.8 F }: equal True, warmer Temperature { 22.55 C, 72.6 F }",
+        "Temperature { 21.55 C, 70.8 F } and Temperature { 30 C, 86 F }: equal False, warmer Temperature { 31 C, 87.8 F }",
+        "Temperature { 30 C, 86 F } and Temperature { -40 C, -40 F }: equal False, warmer Temperature { -39 C, -38.2 F }",
+        "3 distinct of 4"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["endpoint", "Example.COM", "443"],
+    "expected": {
+      "stdout": [
+        "default: http://localhost:80",
+        "given: https://example.com:443"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["endpoint", "", "80"],
+    "expected": {
+      "stdout": ["default: http://localhost:80"],
+      "stderr": ["A host cannot be empty."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["members"],
+    "expected": {
+      "stdout": [
+        "struct Point",
+        "  properties: ManhattanLength { get; }, X { get; set; }, Y { get; set; }",
+        "  methods: Deconstruct(2), PrintMembers(1), Translate(1), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual ToString(0)",
+        "struct Money",
+        "  properties: Amount { get; init; }, Currency { get; init; }",
+        "  methods: Deconstruct(2), PrintMembers(1), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual ToString(0)",
+        "abstract class Person",
+        "  properties: EqualityContract { get; }, Name { get; init; }, Tags { get; init; }",
+        "  methods: Deconstruct(1), virtual <Clone>$(0), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual PrintMembers(1), virtual ToString(0)",
+        "class Employee",
+        "  properties: EqualityContract { get; }, Grade { get; }, Level { get; init; }",
+        "  methods: Deconstruct(2), virtual <Clone>$(0), virtual Equals(1), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual PrintMembers(1), virtual ToString(0)",
+        "sealed class Manager",
+        "  properties: EqualityContract { get; }, Reports { get; init; }",
+        "  methods: Deconstruct(3), virtual <Clone>$(0), virtual Equals(1), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual PrintMembers(1), virtual ToString(0)",
+        "class Tag",
+        "  properties: EqualityContract { get; }, Name { get; init; }",
+        "  methods: Deconstruct(1), virtual <Clone>$(0), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual PrintMembers(1), virtual ToString(0)",
+        "class Temperature",
+        "  properties: Celsius { get; init; }, EqualityContract { get; }, Fahrenheit { get; }",
+        "  methods: Deconstruct(1), virtual <Clone>$(0), virtual Equals(1), virtual Equals(1), virtual GetHashCode(0), virtual PrintMembers(1), virtual ToString(0)",
+        "sealed class Endpoint",
+        "  properties: Host { get; init; }, Port { get; init; }, Secure { get; set; }",
+        "  methods: virtual ToString(0)"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "shapes",
+      "circle:2",
+      "circle:0",
+      "circle:150",
+      "rectangle:3:3",
+      "rectangle:3:4",
+      "rectangle:0:4",
+      "triangle:3:3:3",
+      "triangle:3:4:3",
+      "triangle:3:4:5",
+      "none"
+    ],
+    "expected": {
+      "stdout": [
+        "circle:2: a circle of area 12.57",
+        "circle:0: a degenerate circle",
+        "circle:150: a huge circle of radius 150",
+        "rectangle:3:3: a square of side 3",
+        "rectangle:3:4: a rectangle of area 12",
+        "rectangle:0:4: a degenerate rectangle",
+        "triangle:3:3:3: an equilateral triangle",
+        "triangle:3:4:3: an isosceles triangle",
+        "triangle:3:4:5: a scalene triangle",
+        "none: nothing"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["shapes", "circle:1", "hexagon:1"],
+    "expected": {
+      "stdout": ["circle:1: a circle of area 3.14"],
+      "stderr": ["\"hexagon\" is not a shape with 1 dimensions."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["shapes", "circle:x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"x\" is not a number."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["numbers", "15", "-3", "0", "2", "7", "42", "1000"],
+    "expected": {
+      "stdout": [
+        "15: two digits, FizzBuzz, 15 is positive",
+        "-3: negative, Fizz, -3 is not positive",
+        "0: zero, FizzBuzz, 0 is not positive",
+        "2: small, 2, 2 is positive",
+        "7: a single digit, 7, 7 is positive",
+        "42: two digits, Fizz, 42 is positive",
+        "1000: large, Buzz, 1000 is positive",
+        "as an array: 15, then 5 more (-3 0 2 7 42), then 1000",
+        "as a list: ends with the even 1000"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers"],
+    "expected": {
+      "stdout": ["as an array: empty", "as a list: is unremarkable"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "5"],
+    "expected": {
+      "stdout": [
+        "5: a single digit, Buzz, 5 is positive",
+        "as an array: just 5",
+        "as a list: is unremarkable"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "4", "4"],
+    "expected": {
+      "stdout": [
+        "4: a single digit, 4, 4 is positive",
+        "4: a single digit, 4, 4 is positive",
+        "as an array: a pair of 4s",
+        "as a list: ends with the even 4"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "0", "9"],
+    "expected": {
+      "stdout": [
+        "0: zero, FizzBuzz, 0 is not positive",
+        "9: a single digit, Fizz, 9 is positive",
+        "as an array: starts with zero",
+        "as a list: is unremarkable"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "9", "-1"],
+    "expected": {
+      "stdout": [
+        "9: a single digit, Fizz, 9 is positive",
+        "-1: negative, -1, -1 is not positive",
+        "as an array: ends below zero",
+        "as a list: is unremarkable"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "1", "2", "3", "4", "5", "6"],
+    "expected": {
+      "stdout": [
+        "1: small, 1, 1 is positive",
+        "2: small, 2, 2 is positive",
+        "3: small, Fizz, 3 is positive",
+        "4: a single digit, 4, 4 is positive",
+        "5: a single digit, Buzz, 5 is positive",
+        "6: a single digit, Fizz, 6 is positive",
+        "as an array: 1, then 4 more (2 3 4 5), then 6",
+        "as a list: counts up from one"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "9", "200", "4"],
+    "expected": {
+      "stdout": [
+        "9: a single digit, Fizz, 9 is positive",
+        "200: large, Buzz, 200 is positive",
+        "4: a single digit, 4, 4 is positive",
+        "as an array: 3 values from 9 to 4",
+        "as a list: has a large second value"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "1", "2", "3"],
+    "expected": {
+      "stdout": [
+        "1: small, 1, 1 is positive",
+        "2: small, 2, 2 is positive",
+        "3: small, Fizz, 3 is positive",
+        "as an array: 3 values from 1 to 3",
+        "as a list: counts up from one"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "words",
+      "#news",
+      "3d",
+      "what?",
+      "level",
+      "hello",
+      "extraordinarily",
+      "\"q\"",
+      "'single'",
+      "a",
+      ""
+    ],
+    "expected": {
+      "stdout": [
+        "[#news]: a tag named \"news\"; quoted: False",
+        "[3d]: starts with a digit; quoted: False",
+        "[what?]: a question; quoted: False",
+        "[level]: starts and ends with 'l'; quoted: False",
+        "[hello]: a word; quoted: False",
+        "[extraordinarily]: a long word; quoted: False",
+        "[\"q\"]: starts and ends with '\"'; quoted: True",
+        "['single']: starts and ends with '''; quoted: True",
+        "[a]: a word; quoted: False",
+        "[]: empty; quoted: False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["characters", "aZ", "9_"],
+    "expected": {
+      "stdout": [
+        "'a': a letter",
+        "'Z': a letter",
+        "' ': a space",
+        "'9': a digit",
+        "'_': a symbol"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["weather", "-1", "0", "15.5", "24.9", "25", "NaN"],
+    "expected": {
+      "stdout": [
+        "-1: freezing",
+        "0: cold",
+        "15.5: mild",
+        "24.9: mild",
+        "25: hot",
+        "NaN: unknown"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "Leeds", "UK", "20", "1"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address = Address { City = Leeds, Country = UK } }, Total = 20, Items = 1 }: next day"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "Paris", "France", "20", "1"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address = Address { City = Paris, Country = France } }, Total = 20, Items = 1 }: international"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "-", "UK", "1", "1"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address =  }, Total = 1, Items = 1 }: nowhere to send it"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "York", "UK", "150", "1"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address = Address { City = York, Country = UK } }, Total = 150, Items = 1 }: free UK delivery"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "York", "UK", "10", "11"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address = Address { City = York, Country = UK } }, Total = 10, Items = 11 }: free UK delivery"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["order", "York", "UK", "10", "1"],
+    "expected": {
+      "stdout": [
+        "Order { Customer = Customer { Name = Sam, Address = Address { City = York, Country = UK } }, Total = 10, Items = 1 }: standard"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["inspect", "-5", "0", "1", "42", "", "   ", "#tag", "hi"],
+    "expected": {
+      "stdout": [
+        "null; not an int",
+        "some other integer, a Int64; not an int",
+        "some other integer, a Int16; not an int",
+        "the origin; not an int",
+        "a point on the diagonal at 3; not an int",
+        "a point 5 blocks away; not an int",
+        "an int array, 4, then 3 more (5 6 7), then 8; not an int",
+        "a sequence of ints; not an int",
+        "a sequence of ints; not an int",
+        "a Double; not an int",
+        "a Suit; not an int",
+        "a negative int, -5; -5 is not positive",
+        "a bit; 0 is not positive",
+        "a bit; 1 is positive",
+        "an int, two digits; 42 is positive",
+        "an empty string; not an int",
+        "a blank string; not an int",
+        "a string, a tag named \"tag\"; not an int",
+        "a string, a word; not an int"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["suits", "0", "1", "2", "3"],
+    "expected": {
+      "stdout": [
+        "Clubs: black",
+        "Diamonds: red",
+        "Hearts: red",
+        "Spades: black"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["suits", "3", "9", "0"],
+    "expected": {
+      "stdout": ["Spades: black"],
+      "stderr": ["No arm matched 9."],
+      "exitCode": 2
+    }
+  }
+]

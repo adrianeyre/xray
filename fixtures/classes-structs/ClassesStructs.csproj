@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The classes and structs rung of the ladder (PRD §10): a .NET 8 console app
+    whose behaviour turns on inheritance, interfaces, constructors, operators,
+    properties, indexers, events and the value semantics of structs.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

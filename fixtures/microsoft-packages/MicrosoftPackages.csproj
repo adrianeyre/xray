@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A .NET 8 console app that depends on three of Microsoft's NuGet packages
+    (PRD FR-10.1, FR-10.2), each strong-named with a key Microsoft signs .NET's
+    own assemblies with too, which .NET 8 does not provide: System.CommandLine,
+    signed with the key of System.Runtime's facades' (31bf3856ad364e35);
+    NuGet.Versioning, signed with the same; and System.Collections.Immutable
+    9.0.0, whose assembly, 9.0.0.0, is newer than the 8.0.0.0 that .NET 8
+    provides, and is signed with System.Runtime's own key (b03f5f7f11d50a3a).
+    `dotnet build` copies each beside the Fixture's Assembly, so a
+    Reconstruction must tell them from the framework's, by what its reference
+    assemblies hold, and reference them as packages, not leave them to the
+    framework, nor reconstruct them as Sibling Assemblies.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Versioning" Version="7.3.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.5" />
+  </ItemGroup>
+
+</Project>

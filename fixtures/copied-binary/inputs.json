@@ -1,0 +1,102 @@
+[
+  {
+    "args": ["crc32", "hello"],
+    "expected": {
+      "stdout": ["CRC-32 of \"hello\" = 3610a686 (907060870)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["crc32", "The-quick-brown-fox"],
+    "expected": {
+      "stdout": ["CRC-32 of \"The-quick-brown-fox\" = b99b65ea (3113969130)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["adler32", "Wikipedia"],
+    "expected": {
+      "stdout": ["Adler-32 of \"Wikipedia\" = 11e60398 (300286872)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["sum", "abc"],
+    "expected": {
+      "stdout": ["byte sum of \"abc\" = 00000126 (294)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["tag", "hello"],
+    "expected": {
+      "stdout": ["hello#3610a686", "hello#00000214"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["luhn", "7992739871"],
+    "expected": {
+      "stdout": ["79927398713 (mod 10)"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["valid", "79927398713"],
+    "expected": {
+      "stdout": ["79927398713 is valid"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["valid", "79927398710"],
+    "expected": {
+      "stdout": ["79927398710 is not valid"],
+      "stderr": [],
+      "exitCode": 3
+    }
+  },
+  {
+    "args": ["luhn", "12a4"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["'a' at 2 is not a digit. (position 2)"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["valid", "4x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["'x' at 1 is not a digit. (position 1)"],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["nope", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: CopiedBinary crc32|adler32|sum <text> | tag <text> | luhn <digits> | valid <number>"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["crc32"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: CopiedBinary crc32|adler32|sum <text> | tag <text> | luhn <digits> | valid <number>"
+      ],
+      "exitCode": 1
+    }
+  }
+]

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The async/await rung of the ladder (PRD §10): a .NET 8 console app whose
+    behaviour turns on async methods, lambdas and iterators, which the
+    compiler lowers to state machines that a Reconstruction must turn back
+    into async/await. Its continuations run on a single-threaded
+    SynchronizationContext of its own, so their order is the same every run.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The engine sidecar: "Assembly in → metadata / C# / XAML out" over
+    newline-delimited JSON on stdio (ADR 0001). Framework-dependent and launched
+    as `dotnet Xray.Engine.dll`, so one artefact serves every OS (PRD §9).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Xray.Engine</RootNamespace>
+    <Version>0.0.0</Version>
+    <!-- No native apphost: the DLL is the artefact, run through the `dotnet` muxer. -->
+    <UseAppHost>false</UseAppHost>
+    <!-- Xray requires .NET 8 or later; run on a newer runtime when 8 is absent. -->
+    <RollForward>Major</RollForward>
+    <!--
+      Types are decompiled on every processor at once, each thread allocating
+      as it goes, which a heap per processor keeps from waiting on one
+      another; adapting the heaps to the work (DATAS) keeps the memory that
+      takes no more than a workstation heap's.
+    -->
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ICSharpCode.Decompiler" />
+    <!-- Only for its managed reader of Windows PDBs, which works on every OS. -->
+    <PackageReference Include="Mono.Cecil" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Xray.Engine.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ILSpy's BAML decompiler, built from its source for this framework (see its README.md). -->
+    <ProjectReference Include="..\ICSharpCode.BamlDecompiler\ICSharpCode.BamlDecompiler.csproj" />
+  </ItemGroup>
+
+</Project>

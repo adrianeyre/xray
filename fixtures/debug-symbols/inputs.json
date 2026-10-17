@@ -1,0 +1,74 @@
+[
+  {
+    "args": ["deposit", "100", "withdraw", "30.5", "deposit", "7"],
+    "expected": {
+      "stdout": [
+        "#1 deposit.. +100.00 -> +100.00",
+        "#2 withdraw. -30.50 -> +69.50",
+        "#3 deposit.. +7.00 -> +76.50",
+        "Statement for Savings",
+        "  1    +100.00",
+        "  2     -30.50",
+        "  3      +7.00",
+        "3 transactions: in +107.00, out -30.50, balance +76.50"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["deposit", "1,000.25", "withdraw", "0.25"],
+    "expected": {
+      "stdout": [
+        "#1 deposit.. +1000.25 -> +1000.25",
+        "#2 withdraw. -0.25 -> +1000.00",
+        "Statement for Savings",
+        "  1   +1000.25",
+        "  2      -0.25",
+        "2 transactions: in +1000.25, out -0.25, balance +1000.00"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["deposit", "10", "withdraw", "20"],
+    "expected": {
+      "stdout": ["#1 deposit.. +10.00 -> +10.00"],
+      "stderr": ["Savings is short by 10.00."],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["deposit", "5", "refund", "3"],
+    "expected": {
+      "stdout": ["#1 deposit.. +5.00 -> +5.00"],
+      "stderr": ["Unknown operation: refund"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["deposit", "abc"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Not an amount: abc"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["withdraw", "-5"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Not an amount: -5"],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["deposit"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Usage: DebugSymbols (deposit|withdraw) <amount> ..."],
+      "exitCode": 1
+    }
+  }
+]

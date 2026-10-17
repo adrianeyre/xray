@@ -1,0 +1,20 @@
+<Project>
+  <!--
+    How every Fixture is built for testing; not part of what a Fixture exercises.
+    Anything a Reconstruction should recover (target framework, nullable context,
+    language version…) belongs in the Fixture's own .csproj.
+  -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!--
+      No native apphost: the build output is just the Managed Assembly, run as
+      `dotnet <Fixture>.dll` the same way on every OS.
+    -->
+    <UseAppHost>false</UseAppHost>
+    <!--
+      Some Fixtures target frameworks that are out of support (netcoreapp3.1)
+      on purpose: Xray must still reconstruct Assemblies built for them.
+    -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+</Project>

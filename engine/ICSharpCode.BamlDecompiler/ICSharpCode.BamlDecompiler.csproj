@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ILSpy's BAML decompiler (MIT), its source as ILSpy's v11.1 tag has it (see
+    README.md), built for the engine's framework: the package of it,
+    ICSharpCode.BamlDecompiler 11.1.0.9782, is built for net10.0 only, which
+    the .NET 8 runtime Xray supports cannot load, and its net8.0 versions are
+    built against an ICSharpCode.Decompiler older than the engine's.
+  -->
+  <PropertyGroup>
+    <RootNamespace>ICSharpCode.BamlDecompiler</RootNamespace>
+    <!-- As ILSpy builds it, not as the engine's own code is. -->
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ICSharpCode.Decompiler" />
+  </ItemGroup>
+
+</Project>

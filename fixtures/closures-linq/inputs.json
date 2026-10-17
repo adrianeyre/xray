@@ -1,0 +1,448 @@
+[
+  {
+    "args": [],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Usage: ClosuresLinq <closures|loops|nested|local|multicast|kinds|query|people|numbers|deferred|globs|ranges|fibonacci|positives|tree|expressions> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["frobnicate"],
+    "expected": {
+      "stdout": [],
+      "stderr": [
+        "Unknown command \"frobnicate\".",
+        "Usage: ClosuresLinq <closures|loops|nested|local|multicast|kinds|query|people|numbers|deferred|globs|ranges|fibonacci|positives|tree|expressions> [operands...]"
+      ],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["closures", "4"],
+    "expected": {
+      "stdout": [
+        "next: 5, 6, 7",
+        "after reset to 8: 9",
+        "another counter starts afresh: 5; the first goes on: 10",
+        "an adder of 4, changed after it was made, adds 40"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["loops", "7", "8", "9"],
+    "expected": {
+      "stdout": [
+        "for, captured: [3, 3, 3]",
+        "for, copied: [0, 1, 2]",
+        "foreach: [7, 8, 9]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["nested", "2", "3"],
+    "expected": {
+      "stdout": [
+        "2x1: running 2, total 2",
+        "2x2: running 6, total 6",
+        "3x1: running 3, total 9",
+        "3x2: running 9, total 15",
+        "2x1: running 8, total 17"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["local", "5"],
+    "expected": {
+      "stdout": [
+        "5! = 120 in 5 calls",
+        "5 squared is 25",
+        "shifted by the offset now: 105, 101"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["multicast", "ann", "bob", "cy"],
+    "expected": {
+      "stdout": [
+        "ann hears one",
+        "bob hears one",
+        "cy hears one",
+        "ann hears two",
+        "bob hears two",
+        "2 left"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["multicast"],
+    "expected": {
+      "stdout": ["0 left"],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["kinds", "6"],
+    "expected": {
+      "stdout": [
+        "scale(6) = 18, scale(6, 5) = 30",
+        "twice(6) = 12, parse(\"60\") = 60",
+        "\"n6\" has 2 characters",
+        "tally 12 after adding 6 twice"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "query",
+      "apple",
+      "fig",
+      "banana",
+      "kiwi",
+      "plum",
+      "cherry",
+      "date"
+    ],
+    "expected": {
+      "stdout": [
+        "longest first: [BANANA (6), CHERRY (6), APPLE (5), DATE (4), KIWI (4), PLUM (4), FIG (3)]",
+        "3: fig",
+        "4: kiwi, plum, date",
+        "5: apple",
+        "6: banana, cherry",
+        "even sums of lengths: [3+5=8, 4+6=10, 4+6=10, 4+6=10, 4+6=10, 4+6=10, 4+6=10]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "people",
+      "ann:core:30",
+      "bob:engine:17",
+      "cy:docs:41",
+      "dee:ops:25",
+      "eve:core:16"
+    ],
+    "expected": {
+      "stdout": [
+        "eve works on the first floor",
+        "bob works on the second floor",
+        "ann works on the first floor",
+        "cy works on the third floor",
+        "ann: first",
+        "bob: second",
+        "cy: third",
+        "dee: no floor",
+        "eve: first",
+        "core has 2 (ages 46)",
+        "engine has 1 (ages 17)",
+        "docs has 1 (ages 41)",
+        "{ Team = core, Adult = True, Count = 1 }",
+        "{ Team = engine, Adult = False, Count = 1 }",
+        "{ Team = docs, Adult = True, Count = 1 }",
+        "{ Team = ops, Adult = True, Count = 1 }",
+        "{ Team = core, Adult = False, Count = 1 }",
+        "equal by value: True, the same: False"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["numbers", "4", "-3", "9", "12", "7", "4", "-1", "15"],
+    "expected": {
+      "stdout": [
+        "indexed: [0:4, 1:-3, 2:9, 3:12, 4:7, 5:4, 6:-1, 7:15]",
+        "odd squares: [9, 81, 49, 1, 225]",
+        "distinct, descending: [15, 12, 9, 7, 4, -1, -3]",
+        "by remainder, then value: [15, 12, 9, -3, 7, 4, 4, -1]",
+        "sum 47, min -3, max 15, average 5.875",
+        "any negative: True, all below 100: True, count of evens: 3",
+        "aggregate: ((((((((SEED*4)*-3)*9)*12)*7)*4)*-1)*15)",
+        "zipped with their successors: [-7, 12, 3, -5, -3, -5, 16]",
+        "chunks of 2: [[4,-3] [9,12] [7,4] [-1,15]]",
+        "until the first negative: [4], after it: [9, 12, 7, 4, -1, 15]",
+        "lookup: even [40, 120, 40], odd [-30, 90, 70, -10, 150], none []",
+        "sums by remainder: [1=15, 0=33, -1=-1]",
+        "first above 10: 12; last: 15",
+        "the only multiple of 7: 7"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["deferred", "3", "-2", "4"],
+    "expected": {
+      "stdout": [
+        "defined",
+        "where 3",
+        "select 3",
+        "where -2",
+        "where 4",
+        "select 4",
+        "where 5",
+        "select 5",
+        "listed: [6, 8, 10]",
+        "where -1",
+        "where 7",
+        "select 7",
+        "first: 14",
+        "where -1",
+        "where 7",
+        "select 7",
+        "where 8",
+        "select 8",
+        "listed again: [6, 8, 10]; queried again: [14, 16]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": [
+      "globs",
+      "src/*.cs",
+      "lib/**/[ab]?.dll",
+      "docs/[draft/x.md",
+      "/etc/hosts",
+      "a//b"
+    ],
+    "expected": {
+      "stdout": [
+        "4 of 5 parsed",
+        "src / <any>.cs (wildcard)",
+        "lib / <any path> (wildcard) / [ab]<one>.dll (wildcard)",
+        "<empty> / etc / hosts",
+        "a / <empty> / b",
+        "widths: [8, 16, 16, 10, 4]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["globs", "[x]/c[]", "[unclosed"],
+    "expected": {
+      "stdout": [
+        "1 of 2 parsed",
+        "[x] (wildcard) / c[] (wildcard)",
+        "widths: [7, 9]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["ranges", "3", "4"],
+    "expected": {
+      "stdout": [
+        "eager range: [3, 4, 5, 6]",
+        "lazy range: [3, 4, 5, 6]",
+        "multipliers: [10, 20, 30, 40]",
+        "the lazy range with the count negated was made",
+        "enumerating it threw for count",
+        "making the eager range threw for count"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["ranges", "3", "0"],
+    "expected": {
+      "stdout": [
+        "eager range: []",
+        "lazy range: []",
+        "multipliers: []",
+        "the lazy range with the count negated was made",
+        "enumerated, it has 0",
+        "the eager range with the count negated has 0"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["fibonacci", "12"],
+    "expected": {
+      "stdout": [
+        "the first 12: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]",
+        "the first above 1000: 1597"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["positives", "5", "100", "7"],
+    "expected": {
+      "stdout": [
+        "made",
+        "started",
+        "producing 5",
+        "consumed 5",
+        "resumed after 5",
+        "inner finally after 5",
+        "producing 100",
+        "consumed 100",
+        "breaking",
+        "inner finally after 100",
+        "outer finally",
+        "started",
+        "producing 5",
+        "inner finally after 5",
+        "outer finally",
+        "taking 1 of it: 5"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["positives", "3", "4", "-1", "6"],
+    "expected": {
+      "stdout": [
+        "made",
+        "started",
+        "producing 3",
+        "consumed 3",
+        "resumed after 3",
+        "inner finally after 3",
+        "producing 4",
+        "consumed 4",
+        "resumed after 4",
+        "inner finally after 4",
+        "stopping at -1",
+        "outer finally",
+        "started",
+        "producing 3",
+        "inner finally after 3",
+        "outer finally",
+        "taking 1 of it: 3"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["positives"],
+    "expected": {
+      "stdout": [
+        "made",
+        "started",
+        "ran out",
+        "outer finally",
+        "started",
+        "ran out",
+        "outer finally",
+        "taking 1 of it: "
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["tree", "50", "30", "70", "20", "40", "60", "80", "35"],
+    "expected": {
+      "stdout": [
+        "in order: [20, 30, 35, 40, 50, 60, 70, 80]",
+        "post order: [20@2, 35@3, 40@2, 30@1, 60@2, 80@2, 70@1, 50@0]",
+        "the smallest three, doubled: [40, 60, 70]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["tree"],
+    "expected": {
+      "stdout": [
+        "in order: []",
+        "post order: []",
+        "the smallest three, doubled: []"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["expressions", "7", "3"],
+    "expected": {
+      "stdout": [
+        "(a, b) => ((a * b) + ((a - b) % 3)) gives 22",
+        "text => ((text.Length < 4) AndAlso Not(text.StartsWith(\"x\"))): True, False",
+        "value => IIF((value > 0), \"positive\", IIF((value < 0), \"negative\", \"zero\")): positive",
+        "above's body is a GreaterThan; 3 is above the threshold now: False, 8 is: True",
+        "a query over expressions: [5]"
+      ],
+      "stderr": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "args": ["closures"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["Give at least 1 int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["closures", "x"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"x\" is not an int."],
+      "exitCode": 1
+    }
+  },
+  {
+    "args": ["numbers", "1", "2", "3"],
+    "expected": {
+      "stdout": [
+        "indexed: [0:1, 1:2, 2:3]",
+        "odd squares: [1, 9]",
+        "distinct, descending: [3, 2, 1]",
+        "by remainder, then value: [3, 1, 2]",
+        "sum 6, min 1, max 3, average 2",
+        "any negative: False, all below 100: True, count of evens: 1",
+        "aggregate: (((SEED*1)*2)*3)",
+        "zipped with their successors: [1, 1]",
+        "chunks of 2: [[1,2] [3]]",
+        "until the first negative: [1, 2, 3], after it: []",
+        "lookup: even [20], odd [10, 30], none []",
+        "sums by remainder: [1=1, 2=2, 0=3]",
+        "first above 10: -1; last: 3"
+      ],
+      "stderr": [
+        "InvalidOperationException: Sequence contains no matching element"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "args": ["people", "ann:core"],
+    "expected": {
+      "stdout": [],
+      "stderr": ["\"ann:core\" is not name:team:age."],
+      "exitCode": 1
+    }
+  }
+]
