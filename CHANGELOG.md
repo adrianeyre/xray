@@ -2,6 +2,19 @@
 
 semantic-release writes each version's notes at the top of this file, from the Conventional Commits it releases ([Releasing](docs/processes/releasing.md)).
 
+## 1.0.0 (2026-10-17)
+
+### Features
+
+* Initial commit ([53a7154](https://github.com/adrianeyre/xray/commit/53a71547f8723c82104febda4e338c9ef28cc17e))
+
+### Bug Fixes
+
+* build Recovered Solutions at their real path ([c3ee164](https://github.com/adrianeyre/xray/commit/c3ee1648cafd14e2a1596b5b4036756d005ff48d))
+* Fixture builds and tests on Windows ([dc9820b](https://github.com/adrianeyre/xray/commit/dc9820b3ea9bf951d3d6584cb13159e8d52b02b3))
+* Round-trips and run output on macOS ([0f4c5ff](https://github.com/adrianeyre/xray/commit/0f4c5ffdffe629c03bd5713c2a67ffcbaf5f3772))
+* write the release downloads ([33ad20b](https://github.com/adrianeyre/xray/commit/33ad20ba7e7ab15cbe6ea393aeb2a74606c7baa1))
+
 ### What 1.0.0 brings
 
 #### Major Changes
